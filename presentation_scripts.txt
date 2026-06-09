@@ -1,0 +1,37 @@
+
+
+Use these trigger phrases in the application during your demo.
+The custom ML classifier will identify the emotion/tone and output the corresponding suggestion live!
+
+1. Nervous Tone (Emotion: Fear)
+   - Speak: "I am really nervous about this presentation and my hands are shaking"
+   - Expected Suggestion: "Take a deep breath, slow down, and speak with steady assurance."
+   
+   - Speak: "I feel so anxious and scared that I might fail"
+   - Expected Suggestion: "Slow down your pacing, pause occasionally, and breathe."
+
+2. Confident Tone (Emotion: Joy)
+   - Speak: "We are definitely going to win this pitch! I'm so excited!"
+   - Expected Suggestion: "Great enthusiasm! Maintain this high, confident energy."
+   
+   - Speak: "I am very confident we can deliver this project on time"
+   - Expected Suggestion: "Solid confidence. Maintain strong, clear eye contact."
+
+3. Frustrated Tone (Emotion: Anger)
+   - Speak: "This is so frustrating! Why isn't it working?"
+   - Expected Suggestion: "Remain calm, keep your tone level, and seek clarity."
+   
+   - Speak: "I hate when things are delayed and I'm really annoyed"
+   - Expected Suggestion: "Acknowledge the frustration calmly, then redirect to action."
+
+4. Warm Tone (Emotion: Love)
+   - Speak: "This is an amazing opportunity and I love the concept"
+   - Expected Suggestion: "Warm connection. Speak with inviting and positive tones."
+
+5. Excited Tone (Emotion: Surprise)
+   - Speak: "Wow! That is absolutely incredible, I had no idea!"
+   - Expected Suggestion: "Acknowledge the surprise and ask a follow-up question."
+
+6. Neutral / Informational Tone
+   - Speak: "I think we should look at the code structure first"
+   - Expected Suggestion: "Offer your recommendation clearly and invite feedback."

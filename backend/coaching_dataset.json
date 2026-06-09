@@ -1,0 +1,170 @@
+[
+  {
+    "text": "Why are you ignoring me?",
+    "emotion": "Anger",
+    "suggestion": "Express your feelings without blame to avoid putting them on the defensive.",
+    "improved": "Hey, I just wanted to check in. Is everything okay?",
+    "category": "anxious",
+    "context": "Friendship"
+  },
+  {
+    "text": "I don't know what to say.",
+    "emotion": "Neutral",
+    "suggestion": "Show active listening and invite them to share more.",
+    "improved": "That sounds interesting. I'd love to hear more.",
+    "category": "awkward",
+    "context": "Dating"
+  },
+  {
+    "text": "Are you mad at me? I'm sorry if I did something.",
+    "emotion": "Fear",
+    "suggestion": "Avoid over-apologizing when nothing is confirmed. Ask direct, open questions.",
+    "improved": "Hey! Just checking in to see how you're doing.",
+    "category": "anxious",
+    "context": "Friendship"
+  },
+  {
+    "text": "k",
+    "emotion": "Neutral",
+    "suggestion": "Expand beyond single words to keep the conversation flowing naturally.",
+    "improved": "Okay, that sounds good! Let me know if anything changes.",
+    "category": "dry",
+    "context": "Friendship"
+  },
+  {
+    "text": "You need to fix this right now.",
+    "emotion": "Anger",
+    "suggestion": "State the problem professionally and invite collaboration.",
+    "improved": "Could we look at this issue together to find a quick solution?",
+    "category": "awkward",
+    "context": "Workplace"
+  },
+  {
+    "text": "I hope I'm not bothering you, but could you maybe help me?",
+    "emotion": "Fear",
+    "suggestion": "Be direct and confident when asking for assistance.",
+    "improved": "Whenever you have a moment, I'd appreciate your help with this task.",
+    "category": "anxious",
+    "context": "Workplace"
+  },
+  {
+    "text": "Hey. What's up.",
+    "emotion": "Neutral",
+    "suggestion": "Add a specific topic or question to make the greeting more engaging.",
+    "improved": "Hey there! How has your week been going?",
+    "category": "dry",
+    "context": "Dating"
+  },
+  {
+    "text": "I'm the best candidate because I need a job.",
+    "emotion": "Neutral",
+    "suggestion": "Highlight your value and what you bring to the team, not just your personal need.",
+    "improved": "I am excited about this role because my background aligns closely with the team's needs.",
+    "category": "awkward",
+    "context": "Interview"
+  },
+  {
+    "text": "I'm sorry, I probably sound stupid.",
+    "emotion": "Fear",
+    "suggestion": "Practice self-compassion. Speak with ownership of your ideas.",
+    "improved": "Let me rephrase that to make it clearer.",
+    "category": "anxious",
+    "context": "Public Speaking"
+  },
+  {
+    "text": "Please hire me, I'm begging.",
+    "emotion": "Fear",
+    "suggestion": "Maintain professional boundaries and emphasize mutual fit.",
+    "improved": "I look forward to the possibility of contributing to your team's success.",
+    "category": "anxious",
+    "context": "Interview"
+  },
+  {
+    "text": "I guess we can hang out if you want.",
+    "emotion": "Neutral",
+    "suggestion": "Show clear interest instead of sounding indifferent.",
+    "improved": "I'd love to hang out sometime soon! When are you free?",
+    "category": "dry",
+    "context": "Dating"
+  },
+  {
+    "text": "Whatever.",
+    "emotion": "Anger",
+    "suggestion": "Even if disappointed, maintain an open channel of communication.",
+    "improved": "I understand. Let's chat more about this when we have a bit more time.",
+    "category": "dry",
+    "context": "Friendship"
+  },
+  {
+    "text": "I am really nervous about this presentation and my hands are shaking",
+    "emotion": "Fear",
+    "suggestion": "Take a deep breath, slow down, and speak with steady assurance.",
+    "improved": "Thank you all for being here today. I'm excited to share these updates.",
+    "category": "anxious",
+    "context": "Public Speaking"
+  },
+  {
+    "text": "I feel so anxious and scared that I might fail",
+    "emotion": "Fear",
+    "suggestion": "Slow down your pacing, pause occasionally, and breathe.",
+    "improved": "This is a challenging opportunity, and I am focused on giving it my best effort.",
+    "category": "anxious",
+    "context": "Friendship"
+  },
+  {
+    "text": "We are definitely going to win this pitch! I'm so excited!",
+    "emotion": "Joy",
+    "suggestion": "Great enthusiasm! Maintain this high, confident energy.",
+    "improved": "We have a strong proposal, and I'm very excited about our chances of success.",
+    "category": "confident",
+    "context": "Networking"
+  },
+  {
+    "text": "I am very confident we can deliver this project on time",
+    "emotion": "Joy",
+    "suggestion": "Solid confidence. Maintain strong, clear eye contact.",
+    "improved": "Our team is aligned, and we are on track to deliver this project successfully.",
+    "category": "confident",
+    "context": "Workplace"
+  },
+  {
+    "text": "This is an amazing opportunity and I love the concept",
+    "emotion": "Love",
+    "suggestion": "Warm connection. Speak with inviting and positive tones.",
+    "improved": "I really appreciate this opportunity and look forward to collaborating.",
+    "category": "confident",
+    "context": "Networking"
+  },
+  {
+    "text": "This is so frustrating! Why isn't it working?",
+    "emotion": "Anger",
+    "suggestion": "Remain calm, keep your tone level, and seek clarity.",
+    "improved": "I am encountering a roadblock here. Let's troubleshoot this step-by-step.",
+    "category": "awkward",
+    "context": "Workplace"
+  },
+  {
+    "text": "I hate when things are delayed and I'm really annoyed",
+    "emotion": "Anger",
+    "suggestion": "Acknowledge the frustration calmly, then redirect to action.",
+    "improved": "To get things back on track, let's look at what is causing the delay.",
+    "category": "awkward",
+    "context": "Workplace"
+  },
+  {
+    "text": "Wow! That is absolutely incredible, I had no idea!",
+    "emotion": "Surprise",
+    "suggestion": "Acknowledge the surprise and ask a follow-up question.",
+    "improved": "That is fascinating! How did you discover that?",
+    "category": "confident",
+    "context": "Friendship"
+  },
+  {
+    "text": "I think we should look at the code structure first",
+    "emotion": "Neutral",
+    "suggestion": "Offer your recommendation clearly and invite feedback.",
+    "improved": "Let's start by reviewing the overall code structure to ensure we're aligned.",
+    "category": "confident",
+    "context": "Workplace"
+  }
+]
