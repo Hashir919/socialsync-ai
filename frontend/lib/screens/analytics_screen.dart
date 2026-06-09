@@ -7,6 +7,8 @@ class AnalyticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onBackground = Theme.of(context).colorScheme.onBackground;
+
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
@@ -21,7 +23,7 @@ class AnalyticsScreen extends StatelessWidget {
                   Text(
                     "SPEECH INSIGHTS",
                     style: GoogleFonts.inter(
-                      color: const Color(0xFF0A84FF),
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
@@ -31,7 +33,7 @@ class AnalyticsScreen extends StatelessWidget {
                   Text(
                     "Your Progress",
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.5,
@@ -42,13 +44,13 @@ class AnalyticsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white.withOpacity(0.06)),
+                  border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   "LAST 7 DAYS",
                   style: GoogleFonts.inter(
-                    color: Colors.white60,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                     fontSize: 8,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -63,9 +65,9 @@ class AnalyticsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A0A0A),
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white.withOpacity(0.05), width: 0.8),
+              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +81,7 @@ class AnalyticsScreen extends StatelessWidget {
                         Text(
                           "TONE CONSISTENCY",
                           style: GoogleFonts.inter(
-                            color: Colors.white30,
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                             fontSize: 8.5,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
@@ -89,7 +91,7 @@ class AnalyticsScreen extends StatelessWidget {
                         Text(
                           "89.4 / 100",
                           style: GoogleFonts.inter(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             letterSpacing: -0.5,
@@ -99,9 +101,9 @@ class AnalyticsScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        _buildDotLegend("Clarity", Colors.white70),
+                        _buildDotLegend(context, "Clarity", Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
                         const SizedBox(width: 12),
-                        _buildDotLegend("Variation", Colors.white24),
+                        _buildDotLegend(context, "Variation", Theme.of(context).colorScheme.onBackground.withOpacity(0.24)),
                       ],
                     )
                   ],
@@ -111,7 +113,7 @@ class AnalyticsScreen extends StatelessWidget {
                   height: 140,
                   width: double.infinity,
                   child: CustomPaint(
-                    painter: LineChartPainter(),
+                    painter: LineChartPainter(onBackgroundColor: onBackground),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -122,7 +124,7 @@ class AnalyticsScreen extends StatelessWidget {
                     return Text(
                       days[index],
                       style: GoogleFonts.inter(
-                        color: Colors.white24,
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
                         fontSize: 9,
                         fontWeight: FontWeight.w500,
                       ),
@@ -139,6 +141,7 @@ class AnalyticsScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildMetricCard(
+                  context,
                   "Pause Frequency",
                   "2.1 / min",
                   LucideIcons.hourglass,
@@ -148,6 +151,7 @@ class AnalyticsScreen extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildMetricCard(
+                  context,
                   "Volume Level",
                   "72.4 dB",
                   LucideIcons.volume2,
@@ -162,9 +166,9 @@ class AnalyticsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A0A0A),
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white.withOpacity(0.05), width: 0.8),
+              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +176,7 @@ class AnalyticsScreen extends StatelessWidget {
                 Text(
                   "SPEECH PACING CONSISTENCY",
                   style: GoogleFonts.inter(
-                    color: Colors.white30,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                     fontSize: 8.5,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
@@ -183,7 +187,7 @@ class AnalyticsScreen extends StatelessWidget {
                   height: 80,
                   width: double.infinity,
                   child: CustomPaint(
-                    painter: BarChartPainter(),
+                    painter: BarChartPainter(onBackgroundColor: onBackground),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -193,7 +197,7 @@ class AnalyticsScreen extends StatelessWidget {
                     return Text(
                       text,
                       style: GoogleFonts.inter(
-                        color: Colors.white24,
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
                         fontSize: 8,
                         fontWeight: FontWeight.w500,
                       ),
@@ -209,9 +213,9 @@ class AnalyticsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF0A0A0A),
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white.withOpacity(0.05), width: 0.8),
+              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +223,7 @@ class AnalyticsScreen extends StatelessWidget {
                 Text(
                   "COACH INSIGHTS",
                   style: GoogleFonts.inter(
-                    color: Colors.white30,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                     fontSize: 8.5,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
@@ -227,13 +231,15 @@ class AnalyticsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 _buildInsightRow(
+                  context,
                   "Filler Words",
                   "-40%",
                   "Excellent improvement — filler words are down to 0.4 per minute.",
                   LucideIcons.minusCircle,
                 ),
-                const Divider(color: Colors.white10, height: 28),
+                Divider(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), height: 28),
                 _buildInsightRow(
+                  context,
                   "Pacing Match",
                   "88%",
                   "You are maintaining a calm, balanced pace throughout your sessions.",
@@ -248,7 +254,7 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDotLegend(String label, Color color) {
+  Widget _buildDotLegend(BuildContext context, String label, Color color) {
     return Row(
       children: [
         Container(
@@ -263,7 +269,7 @@ class AnalyticsScreen extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.inter(
-            color: Colors.white54,
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
             fontSize: 9.5,
             fontWeight: FontWeight.w500,
           ),
@@ -272,13 +278,13 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCard(String title, String value, IconData icon, String status) {
+  Widget _buildMetricCard(BuildContext context, String title, String value, IconData icon, String status) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF0A0A0A),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05), width: 0.8),
+        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,15 +292,15 @@ class AnalyticsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(icon, color: Colors.white30, size: 14),
-              const Icon(LucideIcons.trendingDown, color: Colors.white24, size: 10),
+              Icon(icon, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 14),
+              Icon(LucideIcons.trendingDown, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24), size: 10),
             ],
           ),
           const SizedBox(height: 16),
           Text(
             value,
             style: GoogleFonts.inter(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onBackground,
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -303,7 +309,7 @@ class AnalyticsScreen extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.inter(
-              color: Colors.white60,
+              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -312,7 +318,7 @@ class AnalyticsScreen extends StatelessWidget {
           Text(
             status,
             style: GoogleFonts.inter(
-              color: Colors.white24,
+              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
               fontSize: 9,
               fontWeight: FontWeight.w500,
             ),
@@ -322,18 +328,18 @@ class AnalyticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInsightRow(String title, String stat, String desc, IconData icon) {
+  Widget _buildInsightRow(BuildContext context, String title, String stat, String desc, IconData icon) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.02),
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.white.withOpacity(0.06)),
+            border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
           ),
-          child: Icon(icon, color: Colors.white70, size: 12),
+          child: Icon(icon, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7), size: 12),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -346,7 +352,7 @@ class AnalyticsScreen extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -354,7 +360,7 @@ class AnalyticsScreen extends StatelessWidget {
                   Text(
                     stat,
                     style: GoogleFonts.inter(
-                      color: Colors.white70,
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),
@@ -365,7 +371,7 @@ class AnalyticsScreen extends StatelessWidget {
               Text(
                 desc,
                 style: GoogleFonts.inter(
-                  color: Colors.white38,
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                   fontSize: 11,
                   height: 1.35,
                 ),
@@ -379,14 +385,17 @@ class AnalyticsScreen extends StatelessWidget {
 }
 
 class LineChartPainter extends CustomPainter {
+  final Color onBackgroundColor;
+
+  LineChartPainter({required this.onBackgroundColor});
+
   @override
   void paint(Canvas canvas, Size size) {
     final borderPaint = Paint()
-      ..color = Colors.white.withOpacity(0.02)
+      ..color = onBackgroundColor.withOpacity(0.06)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
-    // Draw horizontal grid lines
     for (int i = 0; i <= 4; i++) {
       double y = size.height * i / 4;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), borderPaint);
@@ -412,8 +421,8 @@ class LineChartPainter extends CustomPainter {
       Offset(size.width, size.height * 0.4),
     ];
 
-    _drawSmoothLine(canvas, size, p1, Colors.white70, true);
-    _drawSmoothLine(canvas, size, p2, Colors.white12, false);
+    _drawSmoothLine(canvas, size, p1, onBackgroundColor.withOpacity(0.7), true);
+    _drawSmoothLine(canvas, size, p2, onBackgroundColor.withOpacity(0.12), false);
   }
 
   void _drawSmoothLine(Canvas canvas, Size size, List<Offset> points, Color color, bool drawDots) {
@@ -444,7 +453,7 @@ class LineChartPainter extends CustomPainter {
 
     if (drawDots) {
       final dotPaint = Paint()
-        ..color = Colors.white
+        ..color = onBackgroundColor
         ..style = PaintingStyle.fill;
 
       for (var pt in points) {
@@ -458,6 +467,10 @@ class LineChartPainter extends CustomPainter {
 }
 
 class BarChartPainter extends CustomPainter {
+  final Color onBackgroundColor;
+
+  BarChartPainter({required this.onBackgroundColor});
+
   @override
   void paint(Canvas canvas, Size size) {
     final barValues = [0.8, 0.95, 0.72, 0.88, 0.92];
@@ -465,7 +478,7 @@ class BarChartPainter extends CustomPainter {
     double barWidth = 6;
 
     final basePaint = Paint()
-      ..color = Colors.white.withOpacity(0.02)
+      ..color = onBackgroundColor.withOpacity(0.04)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < 5; i++) {
@@ -484,7 +497,7 @@ class BarChartPainter extends CustomPainter {
 
       double barHeight = size.height * barValues[i];
       final valPaint = Paint()
-        ..color = Colors.white.withOpacity(0.5);
+        ..color = onBackgroundColor.withOpacity(0.5);
 
       canvas.drawRRect(
         RRect.fromRectAndRadius(

@@ -29,7 +29,6 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
   final ScrollController _scrollController = ScrollController();
   final List<Map<String, dynamic>> _messages = [];
   
-  // Track metrics during session to average them
   final List<int> _anxietyScores = [];
   final List<int> _confidenceScores = [];
   final List<int> _clarityScores = [];
@@ -45,9 +44,8 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
       ws.mode = "chat";
       ws.connect();
       
-      // Add initial greeting after connection or slight delay
       Future.delayed(const Duration(milliseconds: 500), () {
-        ws.sendText("hello"); // Trigger coach greeting
+        ws.sendText("hello");
       });
     });
   }
@@ -68,11 +66,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
   Widget build(BuildContext context) {
     final ws = ref.watch(webSocketServiceProvider);
     
-    // Listen to incoming response updates to update chat list and record metrics
     ref.listen<WebSocketService>(webSocketServiceProvider, (prev, next) {
       if (next.transcript.isNotEmpty && next.transcript != "..." && next.transcript != "hello" &&
           (prev == null || prev.transcript != next.transcript)) {
-        // Add User message
         setState(() {
           _messages.add({
             "sender": "user",
@@ -83,7 +79,6 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
       }
 
       if (next.personaReply.isNotEmpty && (prev == null || prev.personaReply != next.personaReply)) {
-        // Add Coach message
         setState(() {
           _messages.add({
             "sender": "coach",
@@ -91,7 +86,6 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
           });
         });
         
-        // Record metrics
         int anx = int.tryParse(next.anxiety.replaceAll('%', '')) ?? 0;
         int conf = int.tryParse(next.confidence.replaceAll('%', '')) ?? 0;
         int clar = int.tryParse(next.clarity.replaceAll('%', '')) ?? 0;
@@ -108,12 +102,12 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
     });
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(LucideIcons.chevronLeft, color: Colors.white),
+          icon: Icon(LucideIcons.chevronLeft, color: Theme.of(context).colorScheme.onBackground),
           onPressed: () => _confirmExit(context),
         ),
         title: Row(
@@ -129,7 +123,7 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               children: [
                 Text(
                   widget.coachName,
-                  style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                  style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onBackground),
                 ),
                 Text(
                   "Practice Active",
@@ -145,12 +139,12 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
             child: TextButton(
               onPressed: () => _showEndSessionSummary(context),
               style: TextButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.08),
+                backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.08),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               child: Text(
                 "End Session",
-                style: GoogleFonts.inter(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
           )
@@ -159,7 +153,6 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Chat History
             Expanded(
               child: _messages.isEmpty
                   ? Center(
@@ -181,22 +174,22 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
                             decoration: BoxDecoration(
-                              color: isUser ? const Color(0xFF1C1C1E) : const Color(0xFF0C0C0F),
+                              color: isUser 
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.surface.withOpacity(0.5),
                               borderRadius: BorderRadius.only(
                                 topLeft: const Radius.circular(16),
                                 topRight: const Radius.circular(16),
                                 bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
                                 bottomRight: isUser ? Radius.zero : const Radius.circular(16),
                               ),
-                              border: isUser
-                                  ? null
-                                  : Border.all(color: Colors.white.withOpacity(0.04), width: 0.8),
+                              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
                             ),
                             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
                             child: Text(
                               msg["text"] ?? "",
                               style: GoogleFonts.inter(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onBackground,
                                 fontSize: 13.5,
                                 height: 1.4,
                               ),
@@ -212,15 +205,15 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF070708),
-                  border: Border(top: BorderSide(color: Colors.white.withOpacity(0.04))),
+                  color: Theme.of(context).colorScheme.surface,
+                  border: Border(top: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08))),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatIndicator("Anxiety", "${_anxietyScores.last}%", const Color(0xFFFF3B30)),
                     _buildStatIndicator("Confidence", "${_confidenceScores.last}%", const Color(0xFF34C759)),
-                    _buildStatIndicator("Clarity", "${_clarityScores.last}%", const Color(0xFF0A84FF)),
+                    _buildStatIndicator("Clarity", "${_clarityScores.last}%", Theme.of(context).colorScheme.secondary),
                   ],
                 ),
               ),
@@ -229,9 +222,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 border: Border(
-                  top: BorderSide(color: Colors.white.withOpacity(0.05), width: 0.8),
+                  top: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
                 ),
               ),
               child: Row(
@@ -239,16 +232,16 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color(0xFF161618),
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white.withOpacity(0.06)),
+                        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
                       ),
                       child: TextField(
                         controller: _messageController,
-                        style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+                        style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 14),
                         decoration: InputDecoration(
                           hintText: "Respond to coach...",
-                          hintStyle: GoogleFonts.inter(color: Colors.white30, fontSize: 14),
+                          hintStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 14),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         ),
@@ -271,14 +264,14 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                       height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ws.isListening ? Colors.white : const Color(0xFF161618),
+                        color: ws.isListening ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface,
                         border: Border.all(
-                          color: ws.isListening ? Colors.white : Colors.white.withOpacity(0.06),
+                          color: ws.isListening ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onBackground.withOpacity(0.08),
                         ),
                       ),
                       child: Icon(
                         ws.isListening ? LucideIcons.square : LucideIcons.mic,
-                        color: ws.isListening ? Colors.black : Colors.white,
+                        color: ws.isListening ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onBackground,
                         size: 16,
                       ),
                     ),
@@ -303,7 +296,7 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
         const SizedBox(width: 6),
         Text(
           "$label: ",
-          style: GoogleFonts.inter(color: Colors.white38, fontSize: 10.5),
+          style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 10.5),
         ),
         Text(
           value,
@@ -317,18 +310,18 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1C1C1E),
-        title: Text("Exit Practice?", style: GoogleFonts.inter(color: Colors.white)),
-        content: Text("Your session progress will not be saved.", style: GoogleFonts.inter(color: Colors.white54)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text("Exit Practice?", style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground)),
+        content: Text("Your session progress will not be saved.", style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel", style: GoogleFonts.inter(color: Colors.white38)),
+            child: Text("Cancel", style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4))),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // close dialog
-              Navigator.pop(context); // close session screen
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: Text("Exit", style: GoogleFonts.inter(color: const Color(0xFFFF3B30))),
           ),
@@ -338,12 +331,10 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
   }
 
   void _showEndSessionSummary(BuildContext context) async {
-    // Calculate final scores
     int finalAnxiety = _anxietyScores.isEmpty ? 25 : (_anxietyScores.reduce((a, b) => a + b) / _anxietyScores.length).round();
     int finalConfidence = _confidenceScores.isEmpty ? 70 : (_confidenceScores.reduce((a, b) => a + b) / _confidenceScores.length).round();
     int finalClarity = _clarityScores.isEmpty ? 80 : (_clarityScores.reduce((a, b) => a + b) / _clarityScores.length).round();
     
-    // Save to Supabase practice_sessions
     try {
       final supabase = Supabase.instance.client;
       final user = supabase.auth.currentUser;
@@ -351,7 +342,7 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
         await supabase.from('practice_sessions').insert({
           'user_id': user.id,
           'persona': widget.coachName,
-          'duration_seconds': 120, // simulated default
+          'duration_seconds': 120,
           'final_anxiety': finalAnxiety,
           'final_confidence': finalConfidence,
           'final_clarity': finalClarity,
@@ -371,9 +362,9 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Color(0xFF0F0F12),
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),
@@ -386,36 +377,34 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
               child: Container(
                 width: 40,
                 height: 4,
-                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2), borderRadius: BorderRadius.circular(2)),
               ),
             ),
             const SizedBox(height: 20),
             Text(
               "Session Summary",
-              style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+              style: GoogleFonts.plusJakartaSans(color: Theme.of(context).colorScheme.onBackground, fontSize: 22, fontWeight: FontWeight.bold),
             ),
             Text(
               "Here is how you performed with the ${widget.coachName}.",
-              style: GoogleFonts.inter(color: Colors.white54, fontSize: 13),
+              style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6), fontSize: 13),
             ),
             const SizedBox(height: 24),
 
-            // Final scores meters
             Row(
               children: [
-                Expanded(child: _buildMetricSummaryBox("Anxiety", "$finalAnxiety%", const Color(0xFFFF3B30))),
+                Expanded(child: _buildMetricSummaryBox(context, "Anxiety", "$finalAnxiety%", const Color(0xFFFF3B30))),
                 const SizedBox(width: 8),
-                Expanded(child: _buildMetricSummaryBox("Confidence", "$finalConfidence%", const Color(0xFF34C759))),
+                Expanded(child: _buildMetricSummaryBox(context, "Confidence", "$finalConfidence%", const Color(0xFF34C759))),
                 const SizedBox(width: 8),
-                Expanded(child: _buildMetricSummaryBox("Clarity", "$finalClarity%", const Color(0xFF0A84FF))),
+                Expanded(child: _buildMetricSummaryBox(context, "Clarity", "$finalClarity%", Theme.of(context).colorScheme.secondary)),
               ],
             ),
             const SizedBox(height: 24),
 
-            // Improvement Tips
             Text(
               "IMPROVEMENT TIPS",
-              style: GoogleFonts.plusJakartaSans(color: Colors.white30, fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5),
+              style: GoogleFonts.plusJakartaSans(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5),
             ),
             const SizedBox(height: 12),
             _collectedTips.isEmpty
@@ -428,19 +417,18 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                   ),
             const SizedBox(height: 32),
 
-            // Close button
             SizedBox(
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                 ),
                 onPressed: () {
-                  Navigator.pop(context); // close sheet
-                  Navigator.pop(context); // close practice session
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: Text("Done", style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold)),
               ),
@@ -451,13 +439,13 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
     );
   }
 
-  Widget _buildMetricSummaryBox(String label, String val, Color color) {
+  Widget _buildMetricSummaryBox(BuildContext context, String label, String val, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.02),
+        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.02),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.04)),
+        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04)),
       ),
       child: Column(
         children: [
@@ -468,7 +456,7 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.inter(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.w500),
+            style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w500),
           )
         ],
       ),
@@ -486,7 +474,7 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
           Expanded(
             child: Text(
               tipText,
-              style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+              style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8), fontSize: 13),
             ),
           ),
         ],

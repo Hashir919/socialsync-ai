@@ -68,7 +68,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
     final ws = ref.watch(webSocketServiceProvider);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Subtle accent glow behind visualizer
@@ -87,7 +87,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                       height: 250,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFF0A84FF).withOpacity(opacity),
+                        color: Theme.of(context).colorScheme.secondary.withOpacity(opacity),
                       ),
                     );
                   },
@@ -110,16 +110,16 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                           width: 38,
                           height: 38,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.06),
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(19),
                           ),
-                          child: const Icon(LucideIcons.chevronLeft, color: Colors.white, size: 18),
+                          child: Icon(LucideIcons.chevronLeft, color: Theme.of(context).colorScheme.onBackground, size: 18),
                         ),
                       ),
                       Text(
                         ws.selectedPersona.isNotEmpty ? ws.selectedPersona : "Communication Coach",
                         style: GoogleFonts.inter(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -130,7 +130,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: ws.isListening ? const Color(0xFF34C759).withOpacity(0.1) : Colors.white.withOpacity(0.05),
+                              color: ws.isListening ? const Color(0xFF34C759).withOpacity(0.1) : Theme.of(context).colorScheme.surface.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Row(
@@ -141,14 +141,14 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                   height: 6,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: ws.isListening ? const Color(0xFF34C759) : Colors.white54,
+                                    color: ws.isListening ? const Color(0xFF34C759) : Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                                   ),
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
                                   ws.isListening ? "Listening" : "Ready",
                                   style: GoogleFonts.inter(
-                                    color: ws.isListening ? const Color(0xFF34C759) : Colors.white54,
+                                    color: ws.isListening ? const Color(0xFF34C759) : Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -179,15 +179,15 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                           label: Text(
                             item,
                             style: GoogleFonts.inter(
-                              color: isSelected ? Colors.black : Colors.white70,
+                              color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
                               fontSize: 12,
                               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                             ),
                           ),
                           selected: isSelected,
-                          selectedColor: Colors.white,
-                          backgroundColor: const Color(0xFF161616),
-                          checkmarkColor: Colors.black,
+                          selectedColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                           onSelected: (selected) {
                             if (selected) {
                               ws.selectedContext = item;
@@ -226,8 +226,8 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                     margin: const EdgeInsets.symmetric(horizontal: 2.5),
                                     decoration: BoxDecoration(
                                       color: ws.isListening
-                                          ? Colors.white.withOpacity(0.8)
-                                          : Colors.white24,
+                                          ? Theme.of(context).colorScheme.onBackground.withOpacity(0.8)
+                                          : Theme.of(context).colorScheme.onBackground.withOpacity(0.24),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   );
@@ -241,11 +241,11 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                         // Feature 2: Real-time Scores Cards (Anxiety, Confidence, Clarity)
                         Row(
                           children: [
-                            Expanded(child: _buildMetricMiniMeter("Anxiety", ws.anxiety, const Color(0xFFFF3B30))),
+                            Expanded(child: _buildMetricMiniMeter(context, "Anxiety", ws.anxiety, const Color(0xFFFF3B30))),
                             const SizedBox(width: 8),
-                            Expanded(child: _buildMetricMiniMeter("Confidence", ws.confidence, const Color(0xFF34C759))),
+                            Expanded(child: _buildMetricMiniMeter(context, "Confidence", ws.confidence, const Color(0xFF34C759))),
                             const SizedBox(width: 8),
-                            Expanded(child: _buildMetricMiniMeter("Clarity", ws.clarity, const Color(0xFF0A84FF))),
+                            Expanded(child: _buildMetricMiniMeter(context, "Clarity", ws.clarity, Theme.of(context).colorScheme.secondary)),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -257,7 +257,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                             padding: const EdgeInsets.all(16),
                             margin: const EdgeInsets.only(bottom: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0F0F12),
+                              color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(color: const Color(0xFFBF5AF2).withOpacity(0.2)),
                             ),
@@ -283,7 +283,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                 Text(
                                   ws.personaReply,
                                   style: GoogleFonts.plusJakartaSans(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.onBackground,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     height: 1.4,
@@ -301,9 +301,9 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                             padding: const EdgeInsets.all(18),
                             margin: const EdgeInsets.only(bottom: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0E0E10),
+                              color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(18),
-                              border: Border.all(color: Colors.white.withOpacity(0.06), width: 0.8),
+                              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +327,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                       ],
                                     ),
                                     IconButton(
-                                      icon: const Icon(LucideIcons.copy, color: Colors.white38, size: 14),
+                                      icon: Icon(LucideIcons.copy, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 14),
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
                                       onPressed: () {
@@ -345,12 +345,12 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                 const SizedBox(height: 10),
                                 Text(
                                   "Original Message:",
-                                  style: GoogleFonts.plusJakartaSans(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w600),
+                                  style: GoogleFonts.plusJakartaSans(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 10, fontWeight: FontWeight.w600),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   ws.transcript,
-                                  style: GoogleFonts.plusJakartaSans(color: Colors.white60, fontSize: 13, decoration: TextDecoration.lineThrough),
+                                  style: GoogleFonts.plusJakartaSans(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6), fontSize: 13, decoration: TextDecoration.lineThrough),
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
@@ -361,7 +361,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                 Text(
                                   "\"${ws.improved}\"",
                                   style: GoogleFonts.plusJakartaSans(
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.onBackground,
                                     fontSize: 14.5,
                                     fontWeight: FontWeight.w500,
                                     height: 1.45,
@@ -378,21 +378,21 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                           padding: const EdgeInsets.all(18),
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0A0A0A),
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.04), width: 0.8),
+                            border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
-                                  const Icon(LucideIcons.activity, color: Colors.white30, size: 11),
+                                  Icon(LucideIcons.activity, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 11),
                                   const SizedBox(width: 6),
                                   Text(
                                     "YOUR TRANSCRIPT",
                                     style: GoogleFonts.plusJakartaSans(
-                                      color: Colors.white30,
+                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                                       fontSize: 8.5,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 1.5,
@@ -404,7 +404,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                               Text(
                                 "\"${ws.transcript}\"",
                                 style: GoogleFonts.plusJakartaSans(
-                                  color: const Color(0xFFF5F5F7),
+                                  color: Theme.of(context).colorScheme.onBackground,
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w400,
                                   height: 1.5,
@@ -419,9 +419,9 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                           width: double.infinity,
                           padding: const EdgeInsets.all(18),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0A0A0A),
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.white.withOpacity(0.04), width: 0.8),
+                            border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,11 +429,11 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.02),
+                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                                  border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
                                 ),
-                                child: const Icon(LucideIcons.brainCircuit, color: Colors.white70, size: 14),
+                                child: Icon(LucideIcons.brainCircuit, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7), size: 14),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -443,7 +443,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                     Text(
                                       "COACH SUGGESTIONS",
                                       style: GoogleFonts.plusJakartaSans(
-                                        color: Colors.white30,
+                                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                                         fontSize: 8.5,
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 1.5,
@@ -452,10 +452,10 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                     const SizedBox(height: 8),
                                     Row(
                                       children: [
-                                        _buildPill(ws.emotion, Colors.white60),
+                                        _buildPill(context, ws.emotion, Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
                                         const SizedBox(width: 6),
                                         if (ws.pace != "N/A" && ws.pace != "0 wpm") ...[
-                                          _buildPill(ws.pace, Colors.white30),
+                                          _buildPill(context, ws.pace, Theme.of(context).colorScheme.onBackground.withOpacity(0.4)),
                                           const SizedBox(width: 6),
                                         ],
                                       ],
@@ -464,7 +464,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                     Text(
                                       ws.suggestion,
                                       style: GoogleFonts.plusJakartaSans(
-                                        color: Colors.white,
+                                        color: Theme.of(context).colorScheme.onBackground,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                         height: 1.4,
@@ -474,7 +474,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                       const SizedBox(height: 12),
                                       Text(
                                         "LIVE PROMPTS:",
-                                        style: GoogleFonts.plusJakartaSans(color: Colors.white30, fontSize: 8, fontWeight: FontWeight.bold),
+                                        style: GoogleFonts.plusJakartaSans(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 8, fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(height: 6),
                                       Wrap(
@@ -484,9 +484,9 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                           return Container(
                                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withOpacity(0.04),
+                                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
                                               borderRadius: BorderRadius.circular(6),
-                                              border: Border.all(color: Colors.white.withOpacity(0.1)),
+                                              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.1)),
                                             ),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -495,7 +495,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                                 const SizedBox(width: 4),
                                                 Text(
                                                   tip,
-                                                  style: GoogleFonts.inter(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w500),
+                                                  style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 10.5, fontWeight: FontWeight.w500),
                                                 ),
                                               ],
                                             ),
@@ -518,9 +518,9 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF000000),
+                    color: Theme.of(context).colorScheme.surface,
                     border: Border(
-                      top: BorderSide(color: Colors.white.withOpacity(0.05), width: 1),
+                      top: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 1),
                     ),
                   ),
                   child: SafeArea(
@@ -532,9 +532,9 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFF1C1C1E),
+                              color: Theme.of(context).colorScheme.background,
                               borderRadius: BorderRadius.circular(22),
-                              border: Border.all(color: Colors.white.withOpacity(0.08)),
+                              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
                             ),
                             child: Row(
                               children: [
@@ -542,12 +542,12 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                   child: TextField(
                                     controller: _textController,
                                     focusNode: _focusNode,
-                                    style: GoogleFonts.inter(color: Colors.white, fontSize: 14.5),
+                                    style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 14.5),
                                     maxLines: null,
                                     keyboardType: TextInputType.multiline,
                                     decoration: InputDecoration(
                                       hintText: "Message...",
-                                      hintStyle: GoogleFonts.inter(color: Colors.white38, fontSize: 14.5),
+                                      hintStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 14.5),
                                       border: InputBorder.none,
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                                     ),
@@ -574,10 +574,10 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                                     child: Container(
                                       padding: const EdgeInsets.all(5),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.1),
+                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(LucideIcons.arrowUp, color: Colors.white, size: 15),
+                                      child: Icon(LucideIcons.arrowUp, color: Theme.of(context).colorScheme.primary, size: 15),
                                     ),
                                   ),
                                 ),
@@ -596,14 +596,14 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
                             height: 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: ws.isListening ? Colors.white : const Color(0xFF1C1C1E),
+                              color: ws.isListening ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.background,
                               border: Border.all(
-                                color: ws.isListening ? Colors.white : Colors.white.withOpacity(0.08),
+                                color: ws.isListening ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onBackground.withOpacity(0.08),
                               ),
                             ),
                             child: Icon(
                               ws.isListening ? LucideIcons.square : LucideIcons.mic,
-                              color: ws.isListening ? Colors.black : Colors.white,
+                              color: ws.isListening ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onBackground,
                               size: 18,
                             ),
                           ),
@@ -620,15 +620,14 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
     );
   }
 
-  Widget _buildMetricMiniMeter(String title, String value, Color color) {
-    // Extract integer percentage from value
+  Widget _buildMetricMiniMeter(BuildContext context, String title, String value, Color color) {
     int pct = int.tryParse(value.replaceAll('%', '')) ?? 0;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF0A0A0A),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.03), width: 0.8),
+        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,7 +638,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
               Text(
                 title,
                 style: GoogleFonts.plusJakartaSans(
-                  color: Colors.white30,
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                   fontSize: 9,
                   fontWeight: FontWeight.bold,
                 ),
@@ -659,7 +658,7 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
             borderRadius: BorderRadius.circular(1),
             child: LinearProgressIndicator(
               value: pct / 100.0,
-              backgroundColor: Colors.white.withOpacity(0.02),
+              backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
               valueColor: AlwaysStoppedAnimation<Color>(color),
               minHeight: 2,
             ),
@@ -669,11 +668,11 @@ class _LiveConversationScreenState extends ConsumerState<LiveConversationScreen>
     );
   }
 
-  Widget _buildPill(String text, Color color) {
+  Widget _buildPill(BuildContext context, String text, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.02),
+        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
         border: Border.all(color: color.withOpacity(0.12), width: 0.8),
         borderRadius: BorderRadius.circular(4),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../providers/auth_provider.dart';
+import '../theme/theme_provider.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -76,9 +77,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final auth = ref.watch(authProvider);
     final user = auth.user;
     final initials = _getInitials(user?.name);
+    final themeMode = ref.watch(themeProvider);
     
     return Scaffold(
-      backgroundColor: const Color(0xFF000000),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Gentle ambient glow
@@ -90,7 +92,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFBF5AF2).withOpacity(0.04),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.04),
               ),
             ),
           ),
@@ -108,10 +110,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1C1C1E).withOpacity(0.5),
+                            color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(LucideIcons.chevronLeft, color: Colors.white, size: 20),
+                          child: Icon(
+                            LucideIcons.chevronLeft,
+                            color: Theme.of(context).colorScheme.onBackground,
+                            size: 20,
+                          ),
                         ),
                       ),
                       const Spacer(),
@@ -161,9 +167,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       if (_isEditingName) ...[
                         TextField(
                           controller: _nameController,
-                          cursorColor: Colors.white,
+                          cursorColor: Theme.of(context).colorScheme.primary,
                           style: GoogleFonts.inter(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
                           ),
@@ -172,10 +178,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(vertical: 8),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2)),
                             ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                             ),
                           ),
                           onSubmitted: (_) => _saveName(),
@@ -187,13 +193,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 "Save",
                                 style: GoogleFonts.inter(
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onPrimary,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -208,7 +214,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             Text(
                               user?.name ?? "Alex",
                               style: GoogleFonts.inter(
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onBackground,
                                 fontSize: 28,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: -0.5,
@@ -222,7 +228,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   _isEditingName = true;
                                 });
                               },
-                              child: const Icon(LucideIcons.edit2, color: Colors.white38, size: 16),
+                              child: Icon(
+                                LucideIcons.edit2,
+                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                                size: 16,
+                              ),
                             ),
                           ],
                         ),
@@ -233,7 +243,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: Text(
                           user?.email ?? "alex@example.com",
                           style: GoogleFonts.inter(
-                            color: Colors.white54,
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                           ),
@@ -245,7 +255,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       Text(
                         "Preferences",
                         style: GoogleFonts.inter(
-                          color: Colors.white38,
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
@@ -254,9 +264,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       const SizedBox(height: 16),
                       Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1C1C1E).withOpacity(0.4),
+                          color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withOpacity(0.04)),
+                          border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
                         ),
                         child: Column(
                           children: [
@@ -266,12 +276,56 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               _weeklyInsights,
                               (val) => setState(() => _weeklyInsights = val),
                             ),
-                            Divider(color: Colors.white.withOpacity(0.04), height: 1),
+                            Divider(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), height: 1),
                             _buildPreferenceSwitch(
                               "Gentle Pacing Prompts",
                               "Softer visual cues during live sessions.",
                               _gentlePacing,
                               (val) => setState(() => _gentlePacing = val),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Appearance Theme Selector
+                      Text(
+                        "Appearance",
+                        style: GoogleFonts.inter(
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
+                        ),
+                        child: Column(
+                          children: [
+                            _buildThemeSelectorOption(
+                              "System Theme",
+                              "Match device system preferences.",
+                              ThemeMode.system,
+                              themeMode,
+                            ),
+                            Divider(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), height: 1),
+                            _buildThemeSelectorOption(
+                              "Light Theme",
+                              "Classic clear styling.",
+                              ThemeMode.light,
+                              themeMode,
+                            ),
+                            Divider(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), height: 1),
+                            _buildThemeSelectorOption(
+                              "Dark Theme",
+                              "Low light comfort.",
+                              ThemeMode.dark,
+                              themeMode,
                             ),
                           ],
                         ),
@@ -325,7 +379,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Text(
                   title,
                   style: GoogleFonts.inter(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onBackground,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
@@ -334,7 +388,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 Text(
                   subtitle,
                   style: GoogleFonts.inter(
-                    color: Colors.white54,
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                     fontSize: 13,
                     height: 1.3,
                   ),
@@ -351,6 +405,52 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             inactiveTrackColor: const Color(0xFF3A3A3C),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildThemeSelectorOption(String title, String subtitle, ThemeMode mode, ThemeMode currentMode) {
+    final isSelected = mode == currentMode;
+    return InkWell(
+      onTap: () => ref.read(themeProvider.notifier).setThemeMode(mode),
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.inter(
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                      fontSize: 13,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                LucideIcons.check,
+                color: Theme.of(context).colorScheme.secondary,
+                size: 20,
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -47,7 +47,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       );
     } else if (mounted) {
-      // Show exact error message to help with things like "Email not confirmed"
       _showError(errorMessage ?? "Login failed. Please try again.");
     }
   }
@@ -59,7 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           message,
           style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: const Color(0xFF1C1C1E),
+        backgroundColor: Theme.of(context).colorScheme.surface,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(20),
@@ -73,7 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF000000),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Soft Calming Depth Glows
@@ -85,7 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF5E5CE6).withOpacity(0.04),
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.04),
               ),
             ),
           ),
@@ -97,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               height: 600,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF0A84FF).withOpacity(0.03),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.03),
               ),
             ),
           ),
@@ -112,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Text(
                     "Welcome back.",
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 34,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -1.2,
@@ -122,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Text(
                     "Sign in to continue your progress.",
                     style: GoogleFonts.inter(
-                      color: Colors.white60,
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       fontSize: 15,
                       height: 1.4,
                       fontWeight: FontWeight.w400,
@@ -135,15 +134,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Center(
                       child: Column(
                         children: [
-                          const SpinKitDoubleBounce(
-                            color: Colors.white54,
+                          SpinKitDoubleBounce(
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
                             size: 24,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             "Signing in...",
                             style: GoogleFonts.inter(
-                              color: Colors.white38,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.38),
                               fontSize: 13,
                               letterSpacing: 0.2,
                             ),
@@ -159,7 +158,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Text(
                           "Email Address",
                           style: GoogleFonts.inter(
-                            color: Colors.white54,
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -167,10 +166,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _emailController,
-                          cursorColor: Colors.white,
+                          cursorColor: Theme.of(context).colorScheme.primary,
                           keyboardType: TextInputType.emailAddress,
                           style: GoogleFonts.inter(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -178,14 +177,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                             filled: true,
-                            fillColor: const Color(0xFF1C1C1E).withOpacity(0.5),
+                            fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.04)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.15)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15)),
                             ),
                           ),
                         ),
@@ -196,7 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             Text(
                               "Password",
                               style: GoogleFonts.inter(
-                                color: Colors.white54,
+                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -205,8 +204,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               onTap: () async {
                                 final email = _emailController.text.trim();
                                 if (email.isEmpty) {
-                                  _showError("Please enter your email first to reset.");
-                                  return;
+                                    _showError("Please enter your email first to reset.");
+                                    return;
                                 }
                                 final success = await ref.read(authProvider.notifier).resetPassword(email);
                                 if (success && mounted) {
@@ -224,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               child: Text(
                                 "Forgot?",
                                 style: GoogleFonts.inter(
-                                  color: Colors.white60,
+                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -235,10 +234,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _passwordController,
-                          cursorColor: Colors.white,
+                          cursorColor: Theme.of(context).colorScheme.primary,
                           obscureText: true,
                           style: GoogleFonts.inter(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -246,14 +245,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                             filled: true,
-                            fillColor: const Color(0xFF1C1C1E).withOpacity(0.5),
+                            fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.04)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.white.withOpacity(0.15)),
+                              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15)),
                             ),
                           ),
                         ),
@@ -267,14 +266,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: double.infinity,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           "Sign In",
                           style: GoogleFonts.inter(
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -0.2,
@@ -302,13 +301,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: BoxDecoration(
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white24),
+                          border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24)),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           "Enter Exhibition Demo Mode",
                           style: GoogleFonts.inter(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onBackground,
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
@@ -335,14 +334,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           TextSpan(
                             text: "Don't have an account? ",
                             style: GoogleFonts.inter(
-                              color: Colors.white54,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                               fontSize: 13,
                             ),
                             children: [
                               TextSpan(
                                 text: "Sign Up",
                                 style: GoogleFonts.inter(
-                                  color: Colors.white,
+                                  color: Theme.of(context).colorScheme.onBackground,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),

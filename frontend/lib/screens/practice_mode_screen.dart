@@ -9,7 +9,7 @@ class PracticeModeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,17 +25,17 @@ class PracticeModeScreen extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Icon(LucideIcons.chevronLeft, color: Colors.white, size: 20),
+                      child: Icon(LucideIcons.chevronLeft, color: Theme.of(context).colorScheme.onBackground, size: 20),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Text(
                     "Practice Mode",
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.5,
@@ -50,7 +50,7 @@ class PracticeModeScreen extends StatelessWidget {
               child: Text(
                 "Select a specialized AI Coach Persona to begin your simulated roleplay conversation.",
                 style: GoogleFonts.inter(
-                  color: Colors.white54,
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                   fontSize: 14,
                   height: 1.5,
                 ),
@@ -137,9 +137,9 @@ class PracticeModeScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF121212),
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.04), width: 1),
+          border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +160,7 @@ class PracticeModeScreen extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -169,7 +169,7 @@ class PracticeModeScreen extends StatelessWidget {
                   Text(
                     description,
                     style: GoogleFonts.inter(
-                      color: Colors.white54,
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       fontSize: 12.5,
                       height: 1.4,
                     ),
@@ -178,11 +178,11 @@ class PracticeModeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Align(
+            Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Icon(LucideIcons.chevronRight, color: Colors.white24, size: 20),
+                padding: const EdgeInsets.only(top: 12),
+                child: Icon(LucideIcons.chevronRight, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24), size: 20),
               ),
             ),
           ],

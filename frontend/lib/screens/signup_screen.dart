@@ -70,7 +70,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           message,
           style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
         ),
-        backgroundColor: const Color(0xFF1C1C1E),
+        backgroundColor: Theme.of(context).colorScheme.surface,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(20),
@@ -84,7 +84,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final authState = ref.watch(authProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF000000),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Calm Depth Glows
@@ -96,7 +96,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               height: 500,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF0A84FF).withOpacity(0.04),
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.04),
               ),
             ),
           ),
@@ -108,7 +108,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               height: 600,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF5E5CE6).withOpacity(0.03),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.03),
               ),
             ),
           ),
@@ -123,7 +123,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     children: [
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
-                        child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 20),
+                        child: Icon(LucideIcons.arrowLeft, color: Theme.of(context).colorScheme.onBackground, size: 20),
                       ),
                     ],
                   ),
@@ -132,7 +132,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Text(
                     "Create Account.",
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 34,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -1.2,
@@ -142,7 +142,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Text(
                     "Your personal AI communication coach.",
                     style: GoogleFonts.inter(
-                      color: Colors.white60,
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       fontSize: 15,
                       height: 1.4,
                       fontWeight: FontWeight.w400,
@@ -155,15 +155,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     Center(
                       child: Column(
                         children: [
-                          const SpinKitDoubleBounce(
-                            color: Colors.white54,
+                          SpinKitDoubleBounce(
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
                             size: 24,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             "Creating your profile...",
                             style: GoogleFonts.inter(
-                              color: Colors.white38,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.38),
                               fontSize: 13,
                               letterSpacing: 0.2,
                             ),
@@ -192,14 +192,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         width: double.infinity,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           "Sign Up",
                           style: GoogleFonts.inter(
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             letterSpacing: -0.2,
@@ -225,7 +225,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         Text(
           label,
           style: GoogleFonts.inter(
-            color: Colors.white54,
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -233,11 +233,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          cursorColor: Colors.white,
+          cursorColor: Theme.of(context).colorScheme.primary,
           obscureText: isPassword,
           keyboardType: type,
           style: GoogleFonts.inter(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onBackground,
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
@@ -245,14 +245,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             filled: true,
-            fillColor: const Color(0xFF1C1C1E).withOpacity(0.5),
+            fillColor: Theme.of(context).colorScheme.surface.withOpacity(0.5),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.04)),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.15)),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.15)),
             ),
           ),
         ),
