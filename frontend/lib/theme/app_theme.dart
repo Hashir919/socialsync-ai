@@ -12,13 +12,13 @@ class AppTheme {
   static ThemeData getLightTheme() {
     final base = ThemeData.light();
     return base.copyWith(
-      scaffoldBackgroundColor: const Color(0xFFF2F2F7),
+      scaffoldBackgroundColor: const Color(0xFFF5F5F7),
       colorScheme: const ColorScheme.light(
         primary: Colors.black,
         secondary: primaryBlue,
         tertiary: accentPurple,
-        background: Color(0xFFF2F2F7),
-        surface: Colors.white,
+        background: Color(0xFFF5F5F7),
+        surface: Color(0xFFEBEBEF),
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onBackground: Colors.black,

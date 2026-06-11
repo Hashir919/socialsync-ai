@@ -1,0 +1,709 @@
+[
+  {
+    "original_message": "Sorry to bother you, I know you are super busy, but maybe we can grab coffee? No worries if not!",
+    "improved_message": "Hey! I'd love to grab a coffee sometime this week if you're free. Let me know what day works best for you!",
+    "context": "Dating",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "I don't know if you like me or not, but do you want to go out sometime maybe?",
+    "improved_message": "I've really enjoyed chatting with you. Would you like to go out for dinner this Friday?",
+    "context": "Dating",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.9
+  },
+  {
+    "original_message": "Maybe we can meet up? If you want to. Only if you're not busy.",
+    "improved_message": "Let's meet up this weekend! Are you free for a walk in the park?",
+    "context": "Dating",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.78
+  },
+  {
+    "original_message": "cool",
+    "improved_message": "That sounds really cool! What was your favorite part of that experience?",
+    "context": "Dating",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "hi",
+    "improved_message": "Hi there! I hope you're having a wonderful day. What have you been up to?",
+    "context": "Dating",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "ok",
+    "improved_message": "Perfect, sounds good to me! Looking forward to seeing you then.",
+    "context": "Dating",
+    "emotion": "Neutral",
+    "anxiety_score": 0.12
+  },
+  {
+    "original_message": "nothing much",
+    "improved_message": "Just taking it easy today! I did manage to read a bit of my new book though. How about you?",
+    "context": "Dating",
+    "emotion": "Neutral",
+    "anxiety_score": 0.18
+  },
+  {
+    "original_message": "You look different in your photos but you're still ok I guess.",
+    "improved_message": "It's so great to finally meet you in person!",
+    "context": "Dating",
+    "emotion": "Surprise",
+    "anxiety_score": 0.4
+  },
+  {
+    "original_message": "My ex used to love this place, it makes me sad.",
+    "improved_message": "This place has a really nice atmosphere. I'm glad we came here.",
+    "context": "Dating",
+    "emotion": "Sadness",
+    "anxiety_score": 0.65
+  },
+  {
+    "original_message": "Why didn't you reply to my message from yesterday?",
+    "improved_message": "Hey! Hope you had a good day yesterday. Let me know when you're free to catch up.",
+    "context": "Dating",
+    "emotion": "Anger",
+    "anxiety_score": 0.7
+  },
+  {
+    "original_message": "I'm not sure if I'm qualified enough, but I'll try my best to do a good job.",
+    "improved_message": "I bring a strong set of skills that align directly with the requirements of this role, and I'm eager to contribute.",
+    "context": "Interview",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.82
+  },
+  {
+    "original_message": "I guess I can do coding, but I'm probably not the best coder here.",
+    "improved_message": "I am confident in my software development skills and have a proven track record of delivering clean, efficient code.",
+    "context": "Interview",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.88
+  },
+  {
+    "original_message": "Sorry if this answer is bad, but I worked on a React project once.",
+    "improved_message": "I have hands-on experience developing web applications using React, where I optimized page load speed by 20%.",
+    "context": "Interview",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.79
+  },
+  {
+    "original_message": "Yes, I know Python.",
+    "improved_message": "Yes, I have been programming in Python for over three years, using it for data analysis and backend APIs.",
+    "context": "Interview",
+    "emotion": "Neutral",
+    "anxiety_score": 0.2
+  },
+  {
+    "original_message": "I like teamwork.",
+    "improved_message": "I thrive in collaborative environments and value open communication to solve complex problems together.",
+    "context": "Interview",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "It was fine.",
+    "improved_message": "The project was highly rewarding because we managed to overcome technical challenges and launch on schedule.",
+    "context": "Interview",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "You need to fix this bug right now, it is breaking my code.",
+    "improved_message": "Could we look at this bug together when you have a moment? It's currently blocking my progress.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "I can't work with them, they don't listen to me.",
+    "improved_message": "I want to ensure we're aligned on the project goals. Let's schedule a brief sync to discuss feedback.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.5
+  },
+  {
+    "original_message": "That idea is bad, it will never work.",
+    "improved_message": "I have some concerns about the feasibility of this approach. What if we look at this alternative option?",
+    "context": "Workplace",
+    "emotion": "Disgust",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "Is it okay if I ask a question? I'm sorry if it is a dumb question.",
+    "improved_message": "I have a quick question about the architectural choices for the backend API.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.8
+  },
+  {
+    "original_message": "I might have made a mistake in the slides, please don't be mad.",
+    "improved_message": "I've updated the presentation slides. Please let me know if you have any feedback or suggestions.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.86
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 0)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 1)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 2)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 3)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 4)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 5)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 6)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 7)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 8)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 9)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 10)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 11)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 12)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 13)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 14)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 15)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 16)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 17)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 18)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 19)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 20)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 21)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 22)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 23)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 24)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 25)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 26)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 27)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 28)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 29)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 30)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 31)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 32)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 33)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 34)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 35)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 36)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 37)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 38)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 39)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 40)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 41)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 42)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 43)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 44)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 45)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 46)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 47)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 48)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 49)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 50)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 51)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 52)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 53)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 54)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 55)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 56)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 57)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 58)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 59)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 60)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 61)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 62)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 63)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 64)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 65)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 66)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 67)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 68)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 69)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "I'm sorry, I forgot. (var 70)",
+    "improved_message": "Thank you for your patience. I'll make sure to get this updated right away. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Don't blame me, I did my part. (var 71)",
+    "improved_message": "Let's review the overall progress and see how we can solve the remaining blocks. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.3
+  },
+  {
+    "original_message": "I don't think anyone wants to hear me talk. (var 72)",
+    "improved_message": "I am excited to share my insights with the group today. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  },
+  {
+    "original_message": "Whatever you want to do is fine, I don't care. (var 73)",
+    "improved_message": "That sounds like a fun plan! I'm happy to go along with that. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Neutral",
+    "anxiety_score": 0.45
+  },
+  {
+    "original_message": "Are you sure I did a good job? I think I messed up. (var 74)",
+    "improved_message": "Thank you for the feedback! I'm glad to hear the project went well. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Just tell me what to do. (var 75)",
+    "improved_message": "How can I best support the team on this task? Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Neutral",
+    "anxiety_score": 0.15
+  },
+  {
+    "original_message": "I'm really scared of making a mistake on stage. (var 76)",
+    "improved_message": "I'm focusing on pacing my speech and pausing for key points during the talk. Let's focus on the next steps.",
+    "context": "Public Speaking",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.85
+  },
+  {
+    "original_message": "Yeah. (var 77)",
+    "improved_message": "Yes, that aligns perfectly with my expectations. Let's do it. Let's focus on the next steps.",
+    "context": "Networking",
+    "emotion": "Neutral",
+    "anxiety_score": 0.1
+  },
+  {
+    "original_message": "I hate when people are late, it's so disrespectful. (var 78)",
+    "improved_message": "I'd appreciate it if we could start our meetings on time to stay on schedule. Let's focus on the next steps.",
+    "context": "Workplace",
+    "emotion": "Anger",
+    "anxiety_score": 0.6
+  },
+  {
+    "original_message": "Sorry, sorry, sorry, I didn't mean to. (var 79)",
+    "improved_message": "Excuse me, thank you for pointing that out. I'll adjust it now. Let's focus on the next steps.",
+    "context": "Friendship",
+    "emotion": "Anxiety",
+    "anxiety_score": 0.95
+  }
+]

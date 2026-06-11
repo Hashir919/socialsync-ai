@@ -5,6 +5,16 @@ import json
 import re
 import random
 from pathlib import Path
+import sys
+
+# Add root folder to sys.path to resolve scripts module
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from scripts.model_pipeline import (
+    analyze_emotion_hf,
+    rewrite_message_hf,
+    generate_coach_response_hf
+)
 
 app = FastAPI(title="SocialSync AI API")
 
@@ -248,10 +258,16 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
                 
             # Calculate metrics
-            anxiety, confidence, clarity, pace = calculate_scores(text, context, mode)
+            emotion_res = analyze_emotion_hf(text)
+            emotion_label = emotion_res["emotion"]
+            anxiety_factor = emotion_res["anxiety_score"]
+            anxiety = int(anxiety_factor * 100)
             
-            # Generate Rewrite
-            improved, suggestion = find_rewrite(text, context)
+            _, confidence, clarity, pace = calculate_scores(text, context, mode)
+            confidence = max(5, min(98, 100 - anxiety))
+            
+            # Generate Rewrite using model pipeline
+            improved, suggestion = rewrite_message_hf(text, context)
             
             # Live coaching alerts
             coaching_tips = get_live_coaching_tips(anxiety, confidence, clarity, pace, context)
@@ -259,13 +275,13 @@ async def websocket_endpoint(websocket: WebSocket):
             # Practice Mode persona reply
             persona_reply = ""
             if persona:
-                persona_reply = get_persona_response(text, persona, context)
+                persona_reply = generate_coach_response_hf(text, persona, context)
                 
             response = {
                 "transcript": text,
                 "context": context,
                 "mode": mode,
-                "emotion": "Nervous" if anxiety > 50 else ("Confident" if confidence > 75 else "Neutral"),
+                "emotion": emotion_label,
                 "anxiety": f"{anxiety}%",
                 "confidence": f"{confidence}%",
                 "clarity": f"{clarity}%",
