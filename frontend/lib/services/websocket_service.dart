@@ -28,6 +28,7 @@ class WebSocketService extends ChangeNotifier {
   String _improved = "";
   List<String> _coachingTips = [];
   String _personaReply = "";
+  int _replyCounter = 0;
   
   String _selectedContext = "Friendship";
   String _selectedPersona = "";
@@ -69,6 +70,7 @@ class WebSocketService extends ChangeNotifier {
   String get improved => _improved;
   List<String> get coachingTips => _coachingTips;
   String get personaReply => _personaReply;
+  int get replyCounter => _replyCounter;
   bool get isListening => _isListening;
   bool get isConnected => _isConnected;
   bool get isUsingLocalSimulation => _isUsingLocalSimulation;
@@ -93,7 +95,8 @@ class WebSocketService extends ChangeNotifier {
   }
 
   void connect() {
-    if (_isConnected) return;
+    if (_isConnected && !_isUsingLocalSimulation) return;
+    _channel?.sink.close();
     _initConnection();
   }
 
@@ -129,6 +132,7 @@ class WebSocketService extends ChangeNotifier {
         }
         
         _personaReply = data['persona_reply'] ?? "";
+        _replyCounter++;
         
         _saveToSupabase();
         notifyListeners();
@@ -231,6 +235,7 @@ class WebSocketService extends ChangeNotifier {
       _improved = improved;
       _coachingTips = tips;
       _personaReply = coachReply.isNotEmpty ? coachReply : "Understood. Keep practicing to maintain this pacing.";
+      _replyCounter++;
       
       _saveToSupabase();
       notifyListeners();

@@ -4,7 +4,6 @@ pydantic
 websockets
 python-dotenv
 scikit-learn
-joblib
 transformers>=4.40.0
 datasets>=2.20.0
 torch>=2.3.0
@@ -13,4 +12,3 @@ pandas>=2.2.0
 numpy>=2.0.0
 requests>=2.32.0
 tqdm>=4.66.0
-openai-whisper>=20231117

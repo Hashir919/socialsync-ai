@@ -19,19 +19,21 @@ class PracticeModeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(20),
+                  if (Navigator.canPop(context)) ...[
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Icon(LucideIcons.chevronLeft, color: Theme.of(context).colorScheme.onBackground, size: 20),
                       ),
-                      child: Icon(LucideIcons.chevronLeft, color: Theme.of(context).colorScheme.onBackground, size: 20),
                     ),
-                  ),
-                  const SizedBox(width: 16),
+                    const SizedBox(width: 16),
+                  ],
                   Text(
                     "Practice Mode",
                     style: GoogleFonts.inter(
@@ -101,6 +103,16 @@ class PracticeModeScreen extends StatelessWidget {
                     color: const Color(0xFFFF375F),
                     coachName: "Networking Coach",
                     contextName: "Networking",
+                  ),
+                  const SizedBox(height: 16),
+                  _buildScenarioCard(
+                    context: context,
+                    title: "Friendship Coach",
+                    description: "Practice casual conversations, handling dry replies or conflicts with friends.",
+                    icon: LucideIcons.messageSquare,
+                    color: const Color(0xFF34C759),
+                    coachName: "Friendship Coach",
+                    contextName: "Friendship",
                   ),
                 ],
               ),

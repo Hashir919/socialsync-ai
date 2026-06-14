@@ -33,12 +33,14 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
   final List<int> _confidenceScores = [];
   final List<int> _clarityScores = [];
   final Set<String> _collectedTips = {};
+  int _lastProcessedReplyCounter = 0;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final ws = ref.read(webSocketServiceProvider.notifier);
+      _lastProcessedReplyCounter = ref.read(webSocketServiceProvider).replyCounter;
       ws.selectedContext = widget.contextName;
       ws.selectedPersona = widget.coachName;
       ws.mode = "chat";
@@ -67,37 +69,59 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
     final ws = ref.watch(webSocketServiceProvider);
     
     ref.listen<WebSocketService>(webSocketServiceProvider, (prev, next) {
-      if (next.transcript.isNotEmpty && next.transcript != "..." && next.transcript != "hello" &&
-          (prev == null || prev.transcript != next.transcript)) {
-        setState(() {
-          _messages.add({
-            "sender": "user",
-            "text": next.transcript,
-          });
-        });
-        _scrollToBottom();
+      if (next.transcript.isNotEmpty && next.transcript != "..." && next.transcript != "hello") {
+        if (next.isListening) {
+          if (_messages.isNotEmpty && _messages.last["sender"] == "user") {
+            setState(() {
+              _messages.last["text"] = next.transcript;
+            });
+          } else {
+            setState(() {
+              _messages.add({
+                "sender": "user",
+                "text": next.transcript,
+              });
+            });
+          }
+          _scrollToBottom();
+        } else {
+          final lastUserIndex = _messages.lastIndexWhere((m) => m["sender"] == "user");
+          final alreadyAdded = lastUserIndex != -1 && _messages[lastUserIndex]["text"] == next.transcript;
+          if (!alreadyAdded) {
+            setState(() {
+              _messages.add({
+                "sender": "user",
+                "text": next.transcript,
+              });
+            });
+            _scrollToBottom();
+          }
+        }
       }
 
-      if (next.personaReply.isNotEmpty && (prev == null || prev.personaReply != next.personaReply)) {
-        setState(() {
-          _messages.add({
-            "sender": "coach",
-            "text": next.personaReply,
+      if (next.replyCounter > _lastProcessedReplyCounter) {
+        _lastProcessedReplyCounter = next.replyCounter;
+        if (next.personaReply.isNotEmpty) {
+          setState(() {
+            _messages.add({
+              "sender": "coach",
+              "text": next.personaReply,
+            });
           });
-        });
-        
-        int anx = int.tryParse(next.anxiety.replaceAll('%', '')) ?? 0;
-        int conf = int.tryParse(next.confidence.replaceAll('%', '')) ?? 0;
-        int clar = int.tryParse(next.clarity.replaceAll('%', '')) ?? 0;
-        if (anx > 0) _anxietyScores.add(anx);
-        if (conf > 0) _confidenceScores.add(conf);
-        if (clar > 0) _clarityScores.add(clar);
-        
-        for (var tip in next.coachingTips) {
-          _collectedTips.add(tip);
+          
+          int anx = int.tryParse(next.anxiety.replaceAll('%', '')) ?? 0;
+          int conf = int.tryParse(next.confidence.replaceAll('%', '')) ?? 0;
+          int clar = int.tryParse(next.clarity.replaceAll('%', '')) ?? 0;
+          if (anx > 0) _anxietyScores.add(anx);
+          if (conf > 0) _confidenceScores.add(conf);
+          if (clar > 0) _clarityScores.add(clar);
+          
+          for (var tip in next.coachingTips) {
+            _collectedTips.add(tip);
+          }
+          
+          _scrollToBottom();
         }
-        
-        _scrollToBottom();
       }
     });
 

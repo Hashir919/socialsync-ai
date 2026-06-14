@@ -5,9 +5,9 @@ import 'practice_mode_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../services/websocket_service.dart';
-import 'live_conversation_screen.dart';
 import 'analytics_screen.dart';
 import 'profile_screen.dart';
+import 'ai_coach_chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -94,8 +94,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class HomeDashboardView extends ConsumerWidget {
+class HomeDashboardView extends ConsumerStatefulWidget {
   const HomeDashboardView({super.key});
+
+  @override
+  ConsumerState<HomeDashboardView> createState() => _HomeDashboardViewState();
+}
+
+class _HomeDashboardViewState extends ConsumerState<HomeDashboardView> {
+  final TextEditingController _chatController = TextEditingController();
 
   String _getInitials(String? name) {
     if (name == null || name.isEmpty) return "S";
@@ -106,8 +113,17 @@ class HomeDashboardView extends ConsumerWidget {
     return name.substring(0, name.length >= 2 ? 2 : 1).toUpperCase();
   }
 
+  void _startChat([String? initialMessage]) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AICoachChatScreen(initialMessage: initialMessage),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final auth = ref.watch(authProvider);
     final userName = auth.user?.name ?? "Alex";
     final initials = _getInitials(auth.user?.name);
@@ -116,7 +132,7 @@ class HomeDashboardView extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
         children: [
-          // Top Dashboard
+          // Top Dashboard Bar
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -189,21 +205,9 @@ class HomeDashboardView extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
 
-          // Main Launch Card (Minimalist premium)
+          // Main Launch Card (Start Conversation)
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const LiveConversationScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  transitionDuration: const Duration(milliseconds: 500),
-                ),
-              );
-            },
+            onTap: () => _startChat(),
             child: Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -212,26 +216,28 @@ class HomeDashboardView extends ConsumerWidget {
                 border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 1),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF34C759).withOpacity(0.15),
+                      color: const Color(0xFF5E5CE6).withOpacity(0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      "Ready to listen",
+                      "SOCIALSYNC AI COACH",
                       style: GoogleFonts.inter(
-                        color: const Color(0xFF34C759),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF5E5CE6),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    "Start Session",
+                    "Start Conversation",
                     style: GoogleFonts.inter(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 24,
@@ -241,12 +247,12 @@ class HomeDashboardView extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Real-time speaking prompts, calming tempo adjustments, and immediate feedback.",
+                    "Chat freely with your personal coach about social anxiety, communication help, texting guidance, and more.",
                     style: GoogleFonts.inter(
                       color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      height: 1.4,
+                      height: 1.45,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -254,11 +260,11 @@ class HomeDashboardView extends ConsumerWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(12),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
                         ),
-                        child: Icon(LucideIcons.mic, color: Theme.of(context).colorScheme.onPrimary, size: 16),
+                        child: const Icon(LucideIcons.mic, color: Colors.black, size: 16),
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -266,7 +272,7 @@ class HomeDashboardView extends ConsumerWidget {
                         style: GoogleFonts.inter(
                           color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -275,129 +281,116 @@ class HomeDashboardView extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
 
-          // Stats Panels
-          Row(
-            children: [
-              Expanded(
-                child: _buildMiniStat(
-                  context,
-                  "Confidence Level",
-                  "84%",
-                  "+3.2% VS PREV",
-                  LucideIcons.checkCircle2,
-                ),
+          // AI Chat Access Card
+          GestureDetector(
+            onTap: () => _startChat(),
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildMiniStat(
-                  context,
-                  "Speaking Pace",
-                  "128 WPM",
-                  "OPTIMAL PACE",
-                  LucideIcons.gauge,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-
-          // Vocal Balance Overview
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "VOCAL BALANCE METRICS",
-                      style: GoogleFonts.plusJakartaSans(
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                        fontSize: 8.5,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                      shape: BoxShape.circle,
                     ),
-                    Icon(LucideIcons.info, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 12),
-                  ],
+                    child: Icon(LucideIcons.sparkles, color: Theme.of(context).colorScheme.secondary, size: 18),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Access AI Coach Chat",
+                          style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.onBackground,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          "Get immediate help and empathetic advice.",
+                          style: GoogleFonts.inter(
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(LucideIcons.chevronRight, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24), size: 18),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+
+          // Quick Actions Grid Header
+          Text(
+            "QUICK ACTIONS",
+            style: GoogleFonts.plusJakartaSans(
+              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+              fontSize: 9.5,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Quick Actions Horizontal Carousel
+          SizedBox(
+            height: 130,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                _buildQuickActionCard(
+                  context,
+                  "Interview Help",
+                  "I am nervous about my upcoming interview.",
+                  "I am nervous about my interview",
+                  LucideIcons.briefcase,
+                  const Color(0xFF0A84FF),
                 ),
-                const SizedBox(height: 20),
-                Column(
-                  children: [
-                    _buildMetricBar(context, "Clarity", 0.88),
-                    const SizedBox(height: 14),
-                    _buildMetricBar(context, "Calm Pacing", 0.76),
-                    const SizedBox(height: 14),
-                    _buildMetricBar(context, "Warmth", 0.81),
-                  ],
+                const SizedBox(width: 12),
+                _buildQuickActionCard(
+                  context,
+                  "Message Rewrite",
+                  "Ask the coach how to write or reply to a text.",
+                  "I don't know what to text my coworker, can you help me write a polite reply?",
+                  LucideIcons.pencil,
+                  const Color(0xFFFF9F0A),
+                ),
+                const SizedBox(width: 12),
+                _buildQuickActionCard(
+                  context,
+                  "Conversation Starter",
+                  "Get suggestions to kickstart a conversation.",
+                  "Can you give me a good conversation starter for meeting new friends?",
+                  LucideIcons.messageCircle,
+                  const Color(0xFF34C759),
+                ),
+                const SizedBox(width: 12),
+                _buildQuickActionCard(
+                  context,
+                  "Social Anxiety Support",
+                  "Talk about feelings of failure or anxiety.",
+                  "I failed my exam and feel hopeless and anxious.",
+                  LucideIcons.heart,
+                  const Color(0xFFFF375F),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 28),
-
-          // EXHIBITION DEMO MODE PANEL
-          Row(
-            children: [
-              const Icon(LucideIcons.sparkles, color: Color(0xFFBF5AF2), size: 14),
-              const SizedBox(width: 6),
-              Text(
-                "EXHIBITION DEMO PANEL",
-                style: GoogleFonts.plusJakartaSans(
-                  color: const Color(0xFFBF5AF2),
-                  fontSize: 9.5,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildDemoScenarioCard(
-            context,
-            ref,
-            "Anxious Interviewee",
-            "I hope I'm not bothering you, but please hire me, I'm begging.",
-            "Interview",
-            const Color(0xFF0A84FF),
-            LucideIcons.briefcase,
-          ),
-          _buildDemoScenarioCard(
-            context,
-            ref,
-            "Awkward Text",
-            "Why are you ignoring me?",
-            "Dating",
-            const Color(0xFFFF9F0A),
-            LucideIcons.heart,
-          ),
-          _buildDemoScenarioCard(
-            context,
-            ref,
-            "Difficult Workplace Chat",
-            "You need to fix this right now.",
-            "Workplace",
-            const Color(0xFFFF375F),
-            LucideIcons.briefcase,
-          ),
-          _buildDemoScenarioCard(
-            context,
-            ref,
-            "Dry Friendship Reply",
-            "k",
-            "Friendship",
-            const Color(0xFF32ADE6),
-            LucideIcons.messageSquare,
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
 
           // Recent Conversations Header
           Row(
@@ -412,69 +405,60 @@ class HomeDashboardView extends ConsumerWidget {
                   letterSpacing: 1.5,
                 ),
               ),
-              Text(
-                "SEE ALL",
-                style: GoogleFonts.plusJakartaSans(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-                  fontSize: 8.5,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
-                ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
-          _buildSessionRow(context, "Conversation Practice", "15 mins ago", "86%", true),
-          _buildSessionRow(context, "Work Meeting", "1 day ago", "79%", false),
-          _buildSessionRow(context, "Speaking Practice", "3 days ago", "82%", true),
-        ],
-      ),
-    );
-  }
+          _buildRecentSessionRow(context, "Interview preparation coaching", "15 mins ago", "I am nervous about my interview"),
+          _buildRecentSessionRow(context, "Friend communication block", "1 day ago", "My friend is ignoring me, what should I do?"),
+          _buildRecentSessionRow(context, "Social anxiety check-in", "3 days ago", "I feel nervous about presenting in front of people"),
 
-  Widget _buildMiniStat(BuildContext context, String label, String value, String subText, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label,
-                style: GoogleFonts.plusJakartaSans(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                  fontSize: 8.5,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              Icon(icon, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 12),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
+          const SizedBox(height: 32),
+
+          // Bottom Quick Prompt Text Field
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subText,
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
-              fontSize: 8.5,
-              fontWeight: FontWeight.w500,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _chatController,
+                    style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 14.5),
+                    decoration: InputDecoration(
+                      hintText: "Ask AI Coach anything...",
+                      hintStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 14),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onSubmitted: (val) {
+                      if (val.trim().isNotEmpty) {
+                        _startChat(val.trim());
+                        _chatController.clear();
+                      }
+                    },
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (_chatController.text.trim().isNotEmpty) {
+                      _startChat(_chatController.text.trim());
+                      _chatController.clear();
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(LucideIcons.arrowUp, color: Theme.of(context).colorScheme.primary, size: 16),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -482,46 +466,68 @@ class HomeDashboardView extends ConsumerWidget {
     );
   }
 
-  Widget _buildMetricBar(BuildContext context, String label, double value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    String prompt,
+    IconData icon,
+    Color color,
+  ) {
+    return GestureDetector(
+      onTap: () => _startChat(prompt),
+      child: Container(
+        width: 150,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 1),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: GoogleFonts.plusJakartaSans(
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Icon(icon, color: color, size: 16),
             ),
-            Text(
-              "${(value * 100).toInt()}%",
-              style: GoogleFonts.plusJakartaSans(
-                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                    fontSize: 10,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            )
           ],
         ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(1),
-          child: LinearProgressIndicator(
-            value: value,
-            backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.secondary),
-            minHeight: 2,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildSessionRow(BuildContext context, String title, String time, String score, bool isPositive) {
+  Widget _buildRecentSessionRow(BuildContext context, String title, String time, String initialPrompt) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -530,160 +536,46 @@ class HomeDashboardView extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(LucideIcons.messageSquare, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 12),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    time,
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                      fontSize: 10,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
-              border: Border.all(
-                color: isPositive ? Theme.of(context).colorScheme.onBackground.withOpacity(0.3) : Theme.of(context).colorScheme.onBackground.withOpacity(0.12),
-              ),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              score,
-              style: GoogleFonts.plusJakartaSans(
-                color: isPositive ? Theme.of(context).colorScheme.onBackground : Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDemoScenarioCard(
-    BuildContext context,
-    WidgetRef ref,
-    String title,
-    String text,
-    String contextName,
-    Color color,
-    IconData icon,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        final ws = ref.read(webSocketServiceProvider.notifier);
-        ws.selectedContext = contextName;
-        ws.mode = "chat";
-        ws.sendText(text);
-        
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => LiveConversationScreen(
-              initialContext: contextName,
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2), width: 1),
-        ),
+      child: InkWell(
+        onTap: () => _startChat(initialPrompt),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.plusJakartaSans(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: color.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          contextName.toUpperCase(),
-                          style: GoogleFonts.plusJakartaSans(
-                            color: color,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "\"$text\"",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
+                  child: Icon(LucideIcons.messageSquare, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), size: 12),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 2),
+                    Text(
+                      time,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
+            Icon(LucideIcons.chevronRight, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24), size: 14),
           ],
         ),
       ),
@@ -691,159 +583,5 @@ class HomeDashboardView extends ConsumerWidget {
   }
 }
 
-class PracticeModulesView extends StatelessWidget {
-  const PracticeModulesView({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-        children: [
-          Text(
-            "PRACTICE CENTER",
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 9,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "Practice Modules",
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Short practice sessions designed to improve confidence, calm your pace, and manage difficult conversations.",
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-              fontSize: 13,
-              height: 1.45,
-            ),
-          ),
-          const SizedBox(height: 24),
-          _buildModuleCard(
-            context,
-            "Speaking Calmly",
-            "Slow down your speaking speed and practice using warm rhetoric transitions.",
-            "BEGINNER",
-            LucideIcons.smile,
-          ),
-          _buildModuleCard(
-            context,
-            "Difficult Workplace Chats",
-            "Maintain your composure and manage breathing under stress or pressure.",
-            "INTERMEDIATE",
-            LucideIcons.shieldAlert,
-          ),
-          _buildModuleCard(
-            context,
-            "Assertive Conversations",
-            "Speak clearly and with positive confidence. Reduce stuttering or filler words.",
-            "ADVANCED",
-            LucideIcons.briefcase,
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildModuleCard(BuildContext context, String title, String desc, String level, IconData icon) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 0.8),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
-                ),
-                child: Icon(icon, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7), size: 14),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  level,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Text(
-            title,
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            desc,
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-              fontSize: 12,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Duration: 10m",
-                style: GoogleFonts.plusJakartaSans(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "START SESSION",
-                    style: GoogleFonts.plusJakartaSans(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 9.5,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(LucideIcons.play, color: Theme.of(context).colorScheme.onBackground, size: 9),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
