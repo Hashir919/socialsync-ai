@@ -198,24 +198,36 @@ class _PracticeSessionScreenState extends ConsumerState<PracticeSessionScreen> {
                             margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
                             decoration: BoxDecoration(
-                              color: isUser 
-                                  ? Theme.of(context).colorScheme.surface
-                                  : Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                              gradient: isUser
+                                  ? const LinearGradient(
+                                      colors: [Color(0xFF007AFF), Color(0xFF0A84FF)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    )
+                                  : null,
+                              color: isUser
+                                  ? null
+                                  : Theme.of(context).colorScheme.surface.withOpacity(0.4),
                               borderRadius: BorderRadius.only(
-                                topLeft: const Radius.circular(16),
-                                topRight: const Radius.circular(16),
-                                bottomLeft: isUser ? const Radius.circular(16) : Radius.zero,
-                                bottomRight: isUser ? Radius.zero : const Radius.circular(16),
+                                topLeft: const Radius.circular(18),
+                                topRight: const Radius.circular(18),
+                                bottomLeft: isUser ? const Radius.circular(18) : Radius.zero,
+                                bottomRight: isUser ? Radius.zero : const Radius.circular(18),
                               ),
-                              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
+                              border: Border.all(
+                                color: isUser
+                                    ? Colors.white.withOpacity(0.08)
+                                    : Theme.of(context).colorScheme.onBackground.withOpacity(0.05),
+                                width: 0.8,
+                              ),
                             ),
                             constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
                             child: Text(
                               msg["text"] ?? "",
                               style: GoogleFonts.inter(
-                                color: Theme.of(context).colorScheme.onBackground,
+                                color: isUser ? Colors.white : Theme.of(context).colorScheme.onBackground,
                                 fontSize: 13.5,
-                                height: 1.4,
+                                height: 1.45,
                               ),
                             ),
                           ),

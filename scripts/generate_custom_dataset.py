@@ -195,7 +195,8 @@ def generate_dataset():
         })
         
     print(f"Generated custom SocialSync dataset with {len(dataset)} examples.")
-    with open("socialsync_dataset.json", "w", encoding="utf-8") as f:
+    dest_path = os.path.join(os.path.dirname(__file__), "..", "socialsync_dataset.json")
+    with open(dest_path, "w", encoding="utf-8") as f:
         json.dump(dataset, f, indent=2)
 
 if __name__ == "__main__":

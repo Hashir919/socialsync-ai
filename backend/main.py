@@ -136,9 +136,18 @@ def read_root():
     return {"status": "SocialSync AI Backend is running", "using_fallback_nlp": False}
 
 
+@app.post("/rewrite")
+def rewrite_message_endpoint(payload: dict):
+    text = payload.get("text", "")
+    tone = payload.get("tone", "Confident")
+    improved, suggestion = rewrite_message_hf(text, tone)
+    return {"improved": improved, "suggestion": suggestion}
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+    session_id = f"session_{id(websocket)}"
     try:
         while True:
             # We support JSON payload: { "text": "...", "context": "...", "mode": "...", "persona": "..." }
@@ -167,7 +176,7 @@ async def websocket_endpoint(websocket: WebSocket):
             is_ai_coach = "ai coach" in persona.lower() or persona.lower() == "coach"
             
             if is_ai_coach:
-                persona_reply = generate_coach_response_hf(text, "AI Coach", context)
+                persona_reply = generate_coach_response_hf(text, "AI Coach", context, session_id=session_id)
                 response = {
                     "transcript": text,
                     "context": context,
@@ -194,7 +203,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Practice Mode persona reply
                 persona_reply = ""
                 if persona:
-                    persona_reply = generate_coach_response_hf(text, persona, context)
+                    persona_reply = generate_coach_response_hf(text, persona, context, session_id=session_id)
                     
                 response = {
                     "transcript": text,

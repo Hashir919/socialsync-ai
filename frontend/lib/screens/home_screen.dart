@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:http/http.dart' as http;
 import 'practice_mode_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../services/websocket_service.dart';
-import 'analytics_screen.dart';
 import 'profile_screen.dart';
 import 'ai_coach_chat_screen.dart';
 
@@ -25,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _pages = [
       const HomeDashboardView(),
-      const AnalyticsScreen(),
       const PracticeModeScreen(),
     ];
   }
@@ -49,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(0, LucideIcons.home, "Home"),
-                _buildNavItem(1, LucideIcons.barChart2, "Insights"),
-                _buildNavItem(2, LucideIcons.compass, "Practice"),
+                _buildNavItem(1, LucideIcons.compass, "Practice"),
               ],
             ),
           ),
@@ -94,6 +94,281 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class RewriteToolCard extends StatefulWidget {
+  const RewriteToolCard({super.key});
+
+  @override
+  State<RewriteToolCard> createState() => _RewriteToolCardState();
+}
+
+class _RewriteToolCardState extends State<RewriteToolCard> {
+  final TextEditingController _inputController = TextEditingController();
+  String _selectedTone = "Confident";
+  String _rewrittenText = "";
+  String _suggestion = "";
+  bool _isLoading = false;
+
+  final List<String> _tones = ["Confident", "Professional", "Friendly", "Warm"];
+
+  void _performRewrite() async {
+    final text = _inputController.text.trim();
+    if (text.isEmpty) return;
+    setState(() {
+      _isLoading = true;
+      _rewrittenText = "";
+      _suggestion = "";
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://127.0.0.1:8000/rewrite"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "text": text,
+          "tone": _selectedTone,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _rewrittenText = data["improved"] ?? "";
+          _suggestion = data["suggestion"] ?? "";
+        });
+      } else {
+        _simulateFallbackRewrite(text);
+      }
+    } catch (e) {
+      _simulateFallbackRewrite(text);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _simulateFallbackRewrite(String text) {
+    final textLower = text.toLowerCase();
+    String improved = text;
+    String suggestion = "Focus on confidence and clarity.";
+    
+    if (textLower.contains("coffee")) {
+      improved = "Hey! I'd love to grab a coffee sometime this week if you're free. Let me know what day works best for you!";
+      suggestion = "Emphasize clear dates and a friendly opening.";
+    } else if (textLower.contains("interview") || textLower.contains("job")) {
+      improved = "I bring a strong set of skills that align directly with the requirements of this role, and I'm eager to contribute.";
+      suggestion = "Highlight mutual value and avoid apologizing.";
+    } else if (textLower.contains("sorry")) {
+      improved = "Thank you for your patience. I'll make sure to get this updated right away.";
+      suggestion = "Rephrase apologies into positive confirmations.";
+    } else {
+      improved = "Thanks for reaching out! Let's connect sometime soon to discuss the details.";
+      suggestion = "Keep it concise and collaborative.";
+    }
+    
+    setState(() {
+      _rewrittenText = improved;
+      _suggestion = suggestion;
+    });
+  }
+
+  void _copyToClipboard() {
+    Clipboard.setData(ClipboardData(text: _rewrittenText));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Polished message copied!", style: GoogleFonts.inter(fontSize: 13)),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.06),
+          width: 0.8,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(LucideIcons.pencil, color: Theme.of(context).colorScheme.secondary, size: 16),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "Message Rewrite Engine",
+                style: GoogleFonts.inter(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.04),
+              ),
+            ),
+            child: TextField(
+              controller: _inputController,
+              maxLines: 2,
+              style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 13.5),
+              decoration: InputDecoration(
+                hintText: "Paste your raw or awkward draft message...",
+                hintStyle: GoogleFonts.inter(
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.35),
+                  fontSize: 13,
+                ),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _tones.map((tone) {
+                final isSelected = _selectedTone == tone;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ChoiceChip(
+                    label: Text(tone),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() {
+                          _selectedTone = tone;
+                        });
+                      }
+                    },
+                    labelStyle: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                      color: isSelected ? Colors.white : Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                    ),
+                    backgroundColor: Colors.transparent,
+                    selectedColor: Theme.of(context).colorScheme.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: isSelected ? Colors.transparent : Theme.of(context).colorScheme.onBackground.withOpacity(0.12),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            height: 40,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                elevation: 0,
+              ),
+              onPressed: _isLoading ? null : _performRewrite,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : Text("Polish Message", style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600)),
+            ),
+          ),
+          if (_rewrittenText.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            Divider(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), height: 1),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "POLISHED VERSION",
+                  style: GoogleFonts.plusJakartaSans(
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.copy, size: 14),
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                  onPressed: _copyToClipboard,
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.04),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _rewrittenText,
+                    style: GoogleFonts.inter(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 13,
+                      height: 1.45,
+                    ),
+                  ),
+                  if (_suggestion.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      _suggestion,
+                      style: GoogleFonts.inter(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class HomeDashboardView extends ConsumerStatefulWidget {
   const HomeDashboardView({super.key});
 
@@ -103,6 +378,7 @@ class HomeDashboardView extends ConsumerStatefulWidget {
 
 class _HomeDashboardViewState extends ConsumerState<HomeDashboardView> {
   final TextEditingController _chatController = TextEditingController();
+  int _selectedSegment = 0;
 
   String _getInitials(String? name) {
     if (name == null || name.isEmpty) return "S";
@@ -127,341 +403,442 @@ class _HomeDashboardViewState extends ConsumerState<HomeDashboardView> {
     final auth = ref.watch(authProvider);
     final userName = auth.user?.name ?? "Alex";
     final initials = _getInitials(auth.user?.name);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-        children: [
-          // Top Dashboard Bar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Good evening,",
-                    style: GoogleFonts.inter(
-                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    userName,
-                    style: GoogleFonts.inter(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => const ProfileScreen(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                      transitionDuration: const Duration(milliseconds: 300),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF5E5CE6), Color(0xFF0A84FF)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF5E5CE6).withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    initials,
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-
-          // Main Launch Card (Start Conversation)
-          GestureDetector(
-            onTap: () => _startChat(),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08), width: 1),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF5E5CE6).withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      "SOCIALSYNC AI COACH",
-                      style: GoogleFonts.inter(
-                        color: const Color(0xFF5E5CE6),
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Start Conversation",
-                    style: GoogleFonts.inter(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Chat freely with your personal coach about social anxiety, communication help, texting guidance, and more.",
-                    style: GoogleFonts.inter(
-                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      height: 1.45,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(LucideIcons.mic, color: Colors.black, size: 16),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        "Tap to begin",
-                        style: GoogleFonts.inter(
-                          color: Theme.of(context).colorScheme.onBackground,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // AI Chat Access Card
-          GestureDetector(
-            onTap: () => _startChat(),
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.04), width: 0.8),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(LucideIcons.sparkles, color: Theme.of(context).colorScheme.secondary, size: 18),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Access AI Coach Chat",
-                          style: GoogleFonts.inter(
-                            color: Theme.of(context).colorScheme.onBackground,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          "Get immediate help and empathetic advice.",
-                          style: GoogleFonts.inter(
-                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(LucideIcons.chevronRight, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.24), size: 18),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // Quick Actions Grid Header
-          Text(
-            "QUICK ACTIONS",
-            style: GoogleFonts.plusJakartaSans(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-              fontSize: 9.5,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.5,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Quick Actions Horizontal Carousel
-          SizedBox(
-            height: 130,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [const Color(0xFF0F0F13), const Color(0xFF14151D), const Color(0xFF1B1A24)]
+              : [const Color(0xFFF6F6F9), const Color(0xFFFFFFFF), const Color(0xFFEDEDF4)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+          children: [
+            // Top Dashboard Bar
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildQuickActionCard(
-                  context,
-                  "Interview Help",
-                  "I am nervous about my upcoming interview.",
-                  "I am nervous about my interview",
-                  LucideIcons.briefcase,
-                  const Color(0xFF0A84FF),
-                ),
-                const SizedBox(width: 12),
-                _buildQuickActionCard(
-                  context,
-                  "Message Rewrite",
-                  "Ask the coach how to write or reply to a text.",
-                  "I don't know what to text my coworker, can you help me write a polite reply?",
-                  LucideIcons.pencil,
-                  const Color(0xFFFF9F0A),
-                ),
-                const SizedBox(width: 12),
-                _buildQuickActionCard(
-                  context,
-                  "Conversation Starter",
-                  "Get suggestions to kickstart a conversation.",
-                  "Can you give me a good conversation starter for meeting new friends?",
-                  LucideIcons.messageCircle,
-                  const Color(0xFF34C759),
-                ),
-                const SizedBox(width: 12),
-                _buildQuickActionCard(
-                  context,
-                  "Social Anxiety Support",
-                  "Talk about feelings of failure or anxiety.",
-                  "I failed my exam and feel hopeless and anxious.",
-                  LucideIcons.heart,
-                  const Color(0xFFFF375F),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // Recent Conversations Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "RECENT CONVERSATIONS",
-                style: GoogleFonts.plusJakartaSans(
-                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
-                  fontSize: 9.5,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _buildRecentSessionRow(context, "Interview preparation coaching", "15 mins ago", "I am nervous about my interview"),
-          _buildRecentSessionRow(context, "Friend communication block", "1 day ago", "My friend is ignoring me, what should I do?"),
-          _buildRecentSessionRow(context, "Social anxiety check-in", "3 days ago", "I feel nervous about presenting in front of people"),
-
-          const SizedBox(height: 32),
-
-          // Bottom Quick Prompt Text Field
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.08)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _chatController,
-                    style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 14.5),
-                    decoration: InputDecoration(
-                      hintText: "Ask AI Coach anything...",
-                      hintStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4), fontSize: 14),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Good evening,",
+                      style: GoogleFonts.plusJakartaSans(
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    onSubmitted: (val) {
-                      if (val.trim().isNotEmpty) {
-                        _startChat(val.trim());
-                        _chatController.clear();
-                      }
-                    },
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      userName,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: Theme.of(context).colorScheme.onBackground,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.8,
+                      ),
+                    ),
+                  ],
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (_chatController.text.trim().isNotEmpty) {
-                      _startChat(_chatController.text.trim());
-                      _chatController.clear();
-                    }
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => const ProfileScreen(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(opacity: animation, child: child);
+                        },
+                        transitionDuration: const Duration(milliseconds: 300),
+                      ),
+                    );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                       shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF5E5CE6), Color(0xFF0A84FF)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF5E5CE6).withOpacity(0.35),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    child: Icon(LucideIcons.arrowUp, color: Theme.of(context).colorScheme.primary, size: 16),
+                    alignment: Alignment.center,
+                    child: Text(
+                      initials,
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 28),
+
+            // Custom Glassmorphic Segment Selector
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: (isDark ? Colors.white : Colors.black).withOpacity(0.04),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: (isDark ? Colors.white : Colors.black).withOpacity(0.08),
+                  width: 0.8,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedSegment = 0),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedSegment == 0
+                              ? (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.06))
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: _selectedSegment == 0
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  )
+                                ]
+                              : null,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "AI Coach",
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                            color: _selectedSegment == 0
+                                ? Theme.of(context).colorScheme.onBackground
+                                : Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedSegment = 1),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _selectedSegment == 1
+                              ? (isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.06))
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: _selectedSegment == 1
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  )
+                                ]
+                              : null,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Rewrite Engine",
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w700,
+                            color: _selectedSegment == 1
+                                ? Theme.of(context).colorScheme.onBackground
+                                : Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 28),
+
+            if (_selectedSegment == 1) ...[
+              const RewriteToolCard(),
+            ] else ...[
+              // Main Launch Card (Start Conversation)
+              GestureDetector(
+                onTap: () => _startChat(),
+                child: Container(
+                  padding: const EdgeInsets.all(26),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: isDark
+                          ? [const Color(0xFF1C1A2E).withOpacity(0.8), const Color(0xFF131526).withOpacity(0.8)]
+                          : [Colors.white.withOpacity(0.9), const Color(0xFFEBEBF5).withOpacity(0.9)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(
+                      color: (isDark ? Colors.white : Colors.black).withOpacity(0.06),
+                      width: 0.8,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF5E5CE6).withOpacity(isDark ? 0.08 : 0.04),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF5E5CE6).withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              "SOCIALSYNC AI COACH",
+                              style: GoogleFonts.plusJakartaSans(
+                                color: const Color(0xFF5E5CE6),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF34C759),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(color: Color(0xFF34C759), blurRadius: 6, spreadRadius: 1)
+                              ]
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        "Start Conversation",
+                        style: GoogleFonts.plusJakartaSans(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.6,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "Chat freely with your personal coach about social anxiety, communication help, texting guidance, and more. The AI automatically tracks your conversation context.",
+                        style: GoogleFonts.inter(
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.55),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                )
+                              ]
+                            ),
+                            child: const Icon(LucideIcons.mic, color: Colors.white, size: 16),
+                          ),
+                          const SizedBox(width: 14),
+                          Text(
+                            "Tap to begin session",
+                            style: GoogleFonts.plusJakartaSans(
+                              color: Theme.of(context).colorScheme.onBackground,
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Quick Actions Grid Header
+              Text(
+                "QUICK ASSISTANTS",
+                style: GoogleFonts.plusJakartaSans(
+                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.35),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Quick Actions Horizontal Carousel
+              SizedBox(
+                height: 140,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    _buildQuickActionCard(
+                      context,
+                      "Interview Help",
+                      "I have a Flutter Dev interview tomorrow.",
+                      "I have an interview tomorrow",
+                      LucideIcons.briefcase,
+                      const Color(0xFF0A84FF),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildQuickActionCard(
+                      context,
+                      "Message Rewrite",
+                      "Polish and rewrite a draft for work.",
+                      "I don't know what to text my coworker, can you help me write a polite reply?",
+                      LucideIcons.pencil,
+                      const Color(0xFFFF9F0A),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildQuickActionCard(
+                      context,
+                      "Conversation Starter",
+                      "Get ideas to make new friendships.",
+                      "Can you give me a good conversation starter for meeting new friends?",
+                      LucideIcons.messageCircle,
+                      const Color(0xFF34C759),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildQuickActionCard(
+                      context,
+                      "Anxiety Support",
+                      "Talk about feeling anxious or stressed.",
+                      "I failed my exam and feel hopeless and anxious.",
+                      LucideIcons.heart,
+                      const Color(0xFFFF375F),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Recent Conversations Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "RECENT SESSIONS",
+                    style: GoogleFonts.plusJakartaSans(
+                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.35),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildRecentSessionRow(context, "Interview preparation coaching", "15 mins ago", "I am nervous about my interview"),
+              _buildRecentSessionRow(context, "Friend communication block", "1 day ago", "My friend is ignoring me, what should I do?"),
+              _buildRecentSessionRow(context, "Social anxiety check-in", "3 days ago", "I feel nervous about presenting in front of people"),
+
+              const SizedBox(height: 32),
+
+              // Bottom Quick Prompt Text Field
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF171721).withOpacity(0.8) : Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(26),
+                  border: Border.all(
+                    color: (isDark ? Colors.white : Colors.black).withOpacity(0.06),
+                    width: 0.8,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _chatController,
+                        style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground, fontSize: 14.5),
+                        decoration: InputDecoration(
+                          hintText: "Ask AI Coach anything...",
+                          hintStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.35), fontSize: 14),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onSubmitted: (val) {
+                          if (val.trim().isNotEmpty) {
+                            _startChat(val.trim());
+                            _chatController.clear();
+                          }
+                        },
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (_chatController.text.trim().isNotEmpty) {
+                          _startChat(_chatController.text.trim());
+                          _chatController.clear();
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(LucideIcons.arrowUp, color: Colors.white, size: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
