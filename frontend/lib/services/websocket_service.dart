@@ -102,9 +102,13 @@ class WebSocketService extends ChangeNotifier {
 
   void _initConnection() {
     try {
-      debugPrint("WS: Attempting to connect to ws://127.0.0.1:8000/ws");
+      const backendUrl = String.fromEnvironment(
+        'BACKEND_URL',
+        defaultValue: 'ws://127.0.0.1:8000/ws',
+      );
+      debugPrint("WS: Attempting to connect to $backendUrl");
       _channel = WebSocketChannel.connect(
-        Uri.parse('ws://127.0.0.1:8000/ws'),
+        Uri.parse(backendUrl),
       );
       
       _isConnected = true;
