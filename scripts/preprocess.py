@@ -57,9 +57,16 @@ def preprocess_dataset(raw_dir: str, processed_dir: str, dataset_name: str, text
         return
         
     # Split: 80% train, 10% val, 10% test
-    train_data, val_test = train_test_split(all_data, test_size=0.2, random_state=42)
-    val_data, test_data = train_test_split(val_test, test_size=0.5, random_state=42)
-    
+    # Handle cases where placeholder data may be very small
+    if len(all_data) < 5:
+        # Use all data for training, leave validation and test empty
+        train_data = all_data
+        val_data = []
+        test_data = []
+    else:
+        train_data, val_test = train_test_split(all_data, test_size=0.2, random_state=42)
+        val_data, test_data = train_test_split(val_test, test_size=0.5, random_state=42)
+
     splits = {"train": train_data, "val": val_data, "test": test_data}
     for split_name, split_list in splits.items():
         split_path = os.path.join(out_dir, f"{split_name}.jsonl")

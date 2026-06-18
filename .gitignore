@@ -72,3 +72,16 @@ Desktop.ini
 
 # Other generated files
 *.log
+
+# Large dataset files (exceed GitHub 100MB limit)
+datasets/raw/personachat/personachat_train.jsonl
+datasets/processed/personachat/train.jsonl
+datasets/processed/cornell/train.jsonl
+datasets/processed/dailydialog/train.jsonl
+datasets/raw/cornell/cornell_movie_lines.jsonl
+
+# Large model files
+models/emotion_classifier.pkl
+
+# Scratch / temporary
+scratch/

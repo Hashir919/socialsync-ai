@@ -140,7 +140,8 @@ def read_root():
 def rewrite_message_endpoint(payload: dict):
     text = payload.get("text", "")
     tone = payload.get("tone", "Confident")
-    improved, suggestion = rewrite_message_hf(text, tone)
+    context = payload.get("context", "General")
+    improved, suggestion = rewrite_message_hf(text, context=context, tone=tone)
     return {"improved": improved, "suggestion": suggestion}
 
 
@@ -163,11 +164,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 context = data.get("context", "Friendship")
                 mode = data.get("mode", "chat")
                 persona = data.get("persona", "")
+                tone = data.get("tone", "Confident")
             except Exception:
                 text = raw_data
                 context = "Friendship"
                 mode = "chat"
                 persona = ""
+                tone = "Confident"
             
             if not text.strip():
                 continue
@@ -192,10 +195,10 @@ async def websocket_endpoint(websocket: WebSocket):
                 anxiety = int(anxiety_factor * 100)
                 
                 _, confidence, clarity, pace = calculate_scores(text, context, mode)
-                confidence = max(5, min(98, 100 - anxiety))
+                confidence = max(5, min(98, confidence))
                 
                 # Generate Rewrite using model pipeline
-                improved, suggestion = rewrite_message_hf(text, context)
+                improved, suggestion = rewrite_message_hf(text, context=context, tone=tone)
                 
                 # Live coaching alerts
                 coaching_tips = get_live_coaching_tips(anxiety, confidence, clarity, pace, context)

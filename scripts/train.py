@@ -1,10 +1,22 @@
 import os
 import json
 import joblib
-import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+
+
+def build_rewrite_search_text(item):
+    return " ".join(
+        part
+        for part in [
+            item.get("context", ""),
+            item.get("category", ""),
+            item.get("emotion", ""),
+            item.get("original_message", ""),
+        ]
+        if part
+    )
 
 def load_data_or_fallback():
     # 1. Custom socialsync dataset
@@ -50,8 +62,8 @@ def train_and_save():
     # 1. Train Emotion/Anxiety Classifier
     # We will build a pipeline: TF-IDF Vectorizer -> Logistic Regression Classifier
     emotion_pipeline = Pipeline([
-        ('tfidf', TfidfVectorizer(stop_words='english', min_df=1)),
-        ('clf', LogisticRegression(max_iter=1000, C=1.0))
+        ('tfidf', TfidfVectorizer(stop_words='english', min_df=1, ngram_range=(1, 2))),
+        ('clf', LogisticRegression(max_iter=1500, C=1.5, class_weight='balanced'))
     ])
     
     print(f"[Training Pipeline] Training Emotion Classifier on {len(texts)} samples...")
@@ -71,13 +83,14 @@ def train_and_save():
     # 2. Build and save Rewrite/Coaching Matcher
     # We will compute the TF-IDF matrix for the social dataset to perform fast similarity searches
     print("[Training Pipeline] Fitting Rewrite/Coaching Matcher...")
-    vectorizer = TfidfVectorizer(stop_words='english')
-    corpus = [item["original_message"] for item in social_data]
+    vectorizer = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
+    corpus = [build_rewrite_search_text(item) for item in social_data]
     tfidf_matrix = vectorizer.fit_transform(corpus)
     
     rewrite_matcher = {
         "vectorizer": vectorizer,
         "tfidf_matrix": tfidf_matrix,
+        "search_texts": corpus,
         "social_data": social_data
     }
     
