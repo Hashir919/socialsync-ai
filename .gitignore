@@ -80,8 +80,21 @@ datasets/processed/cornell/train.jsonl
 datasets/processed/dailydialog/train.jsonl
 datasets/raw/cornell/cornell_movie_lines.jsonl
 
+# Additional raw and processed datasets
+datasets/processed/cleaned/
+datasets/processed/unified/
+datasets/raw/counselchat/
+datasets/raw/empathetic/
+datasets/raw/empathetic_dialogues/
+datasets/raw/multiwoz/
+datasets/raw/oasst/
+datasets/raw/slimorca/
+datasets/raw/ultrachat/
+datasets/raw/wizard/
+
 # Large model files
 models/emotion_classifier.pkl
 
 # Scratch / temporary
 scratch/
+

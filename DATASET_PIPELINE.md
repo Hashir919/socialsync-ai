@@ -73,9 +73,13 @@ Run the pipeline using these python commands from the project root:
   python scripts/download_emotionlines.py
   python scripts/download_cornell.py
   ```
-- **Preprocess Datasets**:
+- **Preprocess Datasets (Basic & Unified Schema conversion)**:
   ```bash
+  # Preprocesses basic datasets
   python scripts/preprocess.py
+  
+  # Maps datasets into the unified dialogue schema
+  python scripts/unify_datasets.py
   ```
 - **Inference Pipeline & Backend**:
   ```bash
